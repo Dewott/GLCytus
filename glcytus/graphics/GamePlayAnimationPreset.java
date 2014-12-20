@@ -21,8 +21,9 @@ public class GamePlayAnimationPreset {
 	public static void init() throws Exception {
 
 		for (int i = 0; i < 16; i++) {
-			BufferedReader r = new BufferedReader(new FileReader(
-					"assets/ui/GamePlay/" + flist[i] + ".anim.json"));
+			BufferedReader r = new BufferedReader(
+					new FileReader("Application/assets/ui/GamePlay/" + flist[i]
+							+ ".anim.json"));
 			String s = "";
 			String str = r.readLine();
 

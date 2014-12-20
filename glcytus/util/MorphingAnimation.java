@@ -1,4 +1,8 @@
-package glcytus.graphics;
+package glcytus.util;
+
+import glcytus.graphics.LoopTransform;
+import glcytus.graphics.Sprite;
+import glcytus.graphics.Transform;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

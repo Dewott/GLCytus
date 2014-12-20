@@ -5,8 +5,9 @@ import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_DEPTH_TEST;
 import static javax.media.opengl.GL.GL_TEXTURE_2D;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
-import glcytus.cover.SelectCover;
+import glcytus.ext.SelectCover;
 import glcytus.graphics.Animation;
+import glcytus.graphics.FontSprite;
 import glcytus.graphics.GamePlayAnimationPreset;
 import glcytus.graphics.GamePlayFontLibrary;
 import glcytus.graphics.GamePlaySpriteLibrary;
@@ -47,6 +48,7 @@ public class NoteChartPlayer implements GLEventListener {
 	Sprite bg = null;
 	Sprite bgmask1 = null, bgmask2 = null, bgmask3 = null, bgmask3flip = null;
 	Sprite title = null, titlemask = null, titlemaskflip = null;
+	FontSprite fscore = null;
 
 	int combo = 0, maxcombo = 0;
 	double score = 0, tp = 0;
@@ -55,7 +57,7 @@ public class NoteChartPlayer implements GLEventListener {
 	public NoteChartPlayer(String songtitle, String diff) throws Exception {
 		try {
 			this.songtitle = songtitle;
-			String folder = "assets/songs/" + songtitle + "/";
+			String folder = "Application/assets/songs/" + songtitle + "/";
 			String chart = folder + songtitle + "." + diff + ".txt";
 			BufferedReader in = new BufferedReader(new FileReader(chart));
 			if (in.readLine().equals("VERSION 2"))
@@ -133,6 +135,12 @@ public class NoteChartPlayer implements GLEventListener {
 		titlemaskflip.flipH();
 		titlemaskflip.setAnchor("TopRight");
 		titlemaskflip.moveTo(512, 341.5);
+
+		fscore = new FontSprite("BoltonBold", "0000000");
+		fscore.scale(4.0 / 3.0);
+		fscore.color = GamePlayFontLibrary.scorecolor;
+		fscore.setAnchor("TopRight");
+		fscore.moveTo(512, 341.5);
 
 		scanline = new Sprite("bar");
 	}
@@ -284,10 +292,8 @@ public class NoteChartPlayer implements GLEventListener {
 			}
 		}
 
-		String scorestr = new DecimalFormat("0000000").format(score);
-		int strlen = GamePlayFontLibrary.getStringWidth("BoltonBold", scorestr);
-		GamePlayFontLibrary.drawString(gl, "BoltonBold", scorestr,
-				512 - strlen, 330, GamePlayFontLibrary.scorecolor);
+		fscore.text = new DecimalFormat("0000000").format(score);
+		fscore.paint(gl);
 
 		scanline.moveTo(0, liney);
 		scanline.paint(this, time);

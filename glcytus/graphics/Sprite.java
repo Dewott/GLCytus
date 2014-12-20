@@ -9,13 +9,16 @@ public class Sprite {
 	public Sprite father = null;
 	public ImageHandle img = null;
 	public String name = null;
+
+	// Independent states
 	public double x = 0, y = 0;
 	public double angle = 0, alpha = 1, sx = 1, sy = 1, ax = 0.5, ay = 0.5;
-	public double color[] = new double[] { 1, 1, 1 };
+	public double color[] = new double[] { 1, 1, 1, 1 };
+	public boolean flipH = false, flipV = false;
+
 	public LinkedList<Transform> trans = new LinkedList<Transform>();
 	public LinkedList<Sprite> childs = new LinkedList<Sprite>();
 	public boolean independent = false;
-	public boolean flipH = false, flipV = false;
 
 	public Sprite() {
 	}
@@ -37,8 +40,6 @@ public class Sprite {
 
 		if (img == null)
 			return;
-		if (alpha <= 0)
-			return;
 
 		p.addRenderTask(new RenderTask(this));
 	}
@@ -57,6 +58,13 @@ public class Sprite {
 		if ((!independent) && (father != null))
 			t.preConcatenate(father.getAffineTransform());
 		return t;
+	}
+
+	public double getFinalAlpha() {
+		if (father == null)
+			return Math.min(Math.max(alpha, 0), 1);
+		else
+			return father.getFinalAlpha() * Math.min(Math.max(alpha, 0), 1);
 	}
 
 	public void scale(double s) {
@@ -154,10 +162,6 @@ public class Sprite {
 
 	public void addChild(Sprite s, boolean independent) {
 		s.father = this;
-		if (!independent) {
-			s.x = s.x - this.x;
-			s.y = s.y - this.y;
-		}
 		s.independent = independent;
 		childs.add(s);
 	}

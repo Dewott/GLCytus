@@ -32,7 +32,7 @@ public class RenderTask {
 		System.arraycopy(img.texPts, 0, texPts, 0, 8);
 		s.getAffineTransform().transform(srcPts, 0, dstPts, 0, 4);
 		System.arraycopy(s.color, 0, color, 0, 3);
-		color[3] = s.alpha;
+		color[3] = s.getFinalAlpha();
 	}
 
 	public void paint(GL2 gl) {

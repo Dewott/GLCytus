@@ -25,7 +25,7 @@ public class GamePlaySpriteLibrary {
 		r1.close();
 
 		for (int i = 0; i < 5; i++) {
-			Atlas atlas = new Atlas("assets/ui/GamePlay/", flist[i]);
+			Atlas atlas = new Atlas("Application/assets/ui/GamePlay/", flist[i]);
 			if (i == 4) { // common_add
 				for (Map.Entry<String, ImageHandle> entry : atlas.map
 						.entrySet())

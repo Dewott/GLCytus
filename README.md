@@ -5,7 +5,8 @@ Cytus simulator with OpenGL
 
 Current Status
 ---
-![ScreenShot](https://github.com/Dewott/GLCytus/blob/master/ss.jpg)
+![ScreenShot1](https://github.com/Dewott/GLCytus/blob/master/ss1.jpg)
+![ScreenShot2](https://github.com/Dewott/GLCytus/blob/master/ss2.jpg)
 
 Dependencies
 ---
