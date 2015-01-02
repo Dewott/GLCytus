@@ -1,13 +1,32 @@
 package glcytus.ext;
 
+import glcytus.util.*;
+import glcytus.graphics.*;
+
 public class ChapterSelector extends Base {
+	MorphingAnimation enteranim = null, switchanim = null, backanim = null;
+
 	public ChapterSelector() throws Exception {
-		String folder = "Application/assets/ui/ChapterSelector/";
+		String folder = "assets/ui/ChapterSelector/";
 		loadSprite(folder, "clear_info_bar.prefab.json");
 
-		double endtime = loadAnimation(folder, "clear_info_enter.anim.json",
-				false, 0);
-		loadAnimation(folder, "clear_info_switch.anim.json", false, endtime);
-		loadAnimation(folder, "clear_info_back.anim.json", false, endtime + 5); // Test
+		enteranim = ResourceLoader.loadMorphingAnimation(folder,
+				"clear_info_enter.anim.json", false);
+		switchanim = ResourceLoader.loadMorphingAnimation(folder,
+				"clear_info_switch.anim.json", false);
+		backanim = ResourceLoader.loadMorphingAnimation(folder,
+				"clear_info_back.anim.json", false);
+	}
+
+	public void ciEnter(double time) {
+		useAnimation(enteranim, time);
+	}
+
+	public void ciSwitch(double time) {
+		useAnimation(switchanim, time);
+	}
+
+	public void ciBack(double time) {
+		useAnimation(backanim, time);
 	}
 }

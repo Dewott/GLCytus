@@ -1,16 +1,14 @@
 package glcytus.graphics;
 
-import java.util.LinkedList;
+import java.util.*;
 
 public class LoopTransform extends Transform {
-	LinkedList<Transform> child = new LinkedList<Transform>();
-	double stime = 0, etime = 0;
+	public LinkedList<Transform> child = new LinkedList<Transform>();
 
 	public LoopTransform() {
 	}
 
 	public LoopTransform(Transform t) {
-		super();
 		addTransform(t);
 	}
 
@@ -22,10 +20,24 @@ public class LoopTransform extends Transform {
 		etime = child.getLast().etime;
 	}
 
+	public void addTransform(List<Transform> list) {
+		for (Transform t : list)
+			addTransform(t);
+	}
+
 	public void adjust(Sprite s, double time) {
+		if (time < stime)
+			return;
 		if (time > etime)
 			time = (time - etime) % (etime - stime) + stime;
 		for (Transform t : child)
 			t.adjust(s, time);
+	}
+
+	public Transform clone() {
+		LoopTransform copy = new LoopTransform();
+		for (Transform t : child)
+			copy.addTransform(t.clone());
+		return copy;
 	}
 }

@@ -1,8 +1,9 @@
 package glcytus.graphics;
 
-public class Transform {
+public class Transform implements Cloneable {
 	public static final int NONE = 0, TRANS_X = 1, TRANS_Y = 2, ALPHA = 3,
-			ROTATION = 4, SX = 5, SY = 6, SCALE = 7;
+			ROTATION = 4, SX = 5, SY = 6, SCALE = 7, COLOR_RED = 8,
+			COLOR_GREEN = 9, COLOR_BLUE = 10;
 	public int type = 0;
 
 	public static final int LINEAR = 0, BEZIER = 1, CUBIC = 2;
@@ -33,29 +34,38 @@ public class Transform {
 
 	public void setValue(Sprite s, double val) {
 		switch (type) {
-		case 0:
+		case NONE:
 			break;
-		case 1:
+		case TRANS_X:
 			s.x = val;
 			break;
-		case 2:
+		case TRANS_Y:
 			s.y = val;
 			break;
-		case 3:
-			s.alpha = val;
+		case ALPHA:
+			s.color[3] = val;
 			break;
-		case 4:
+		case ROTATION:
 			s.angle = val;
 			break;
-		case 5:
+		case SX:
 			s.sx = val;
 			break;
-		case 6:
+		case SY:
 			s.sy = val;
 			break;
-		case 7:
+		case SCALE:
 			s.sx = val;
 			s.sy = val;
+			break;
+		case COLOR_RED:
+			s.color[0] = val;
+			break;
+		case COLOR_GREEN:
+			s.color[1] = val;
+			break;
+		case COLOR_BLUE:
+			s.color[2] = val;
 			break;
 		}
 	}
@@ -82,5 +92,18 @@ public class Transform {
 
 	public LoopTransform asLoopTransform() {
 		return new LoopTransform(this);
+	}
+
+	public Transform clone() {
+		Transform copy = new Transform();
+		copy.type = type;
+		copy.easing = easing;
+		copy.stime = stime;
+		copy.etime = etime;
+		copy.sval = sval;
+		copy.eval = eval;
+		copy.lborder = lborder;
+		copy.rborder = rborder;
+		return copy;
 	}
 }

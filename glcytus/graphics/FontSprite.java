@@ -15,6 +15,10 @@ public class FontSprite extends Sprite {
 	public CFont scaledfont = null;
 	public String text = "";
 
+	public FontSprite(CFont font) {
+		this.font = font;
+	}
+
 	public FontSprite(CFont font, String text) {
 		this.font = font;
 		this.text = text;
@@ -24,7 +28,12 @@ public class FontSprite extends Sprite {
 		this(GamePlayFontLibrary.get(fontname), text);
 	}
 
+	public FontSprite(String fontname) {
+		this(GamePlayFontLibrary.get(fontname));
+	}
+
 	public void paint(NoteChartPlayer p, double time) {
+		updateStatus(time);
 		GL2 gl = GLU.getCurrentGL().getGL2();
 		p.flushTaskQueue(gl);
 		paint(gl);
@@ -35,13 +44,13 @@ public class FontSprite extends Sprite {
 		if ((scaledfont == null) || (scaledfont.sx != tx.getScaleX())
 				|| (scaledfont.sy != tx.getScaleY()))
 			scaledfont = font.getScaledFont(tx.getScaleX(), tx.getScaleY());
+		// TopLeft position
 		double xpos = tx.getTranslateX() - ax * scaledfont.getStringWidth(text);
-		double ypos = tx.getTranslateY() + (1 - ay) * scaledfont.lineheight; // TopLeft
-																				// position
-
+		double ypos = tx.getTranslateY() + (1 - ay) * scaledfont.lineheight;
 		font.texture.bind(gl);
 		gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		gl.glColor4dv(color, 0);
+		double alpha = getFinalAlpha();
+		gl.glColor4d(color[0], color[1], color[2], alpha);
 
 		for (int i = 0; i < text.length(); i++) {
 			CFont.CharFrame frame = scaledfont.map.get((int) text.charAt(i));

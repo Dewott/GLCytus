@@ -3,14 +3,13 @@ package glcytus.graphics;
 import glcytus.NoteChartPlayer;
 
 public class Animation extends Sprite {
-	int n = 1;
-	double stime = 0, etime = 0;
-	double len = 1;
-	boolean once = false;
-	String frames[] = null;
-	ImageHandle imgs[] = null;
+	public int n = 1;
+	public double stime = 0, etime = 0;
+	public double interval = 1;
+	public boolean once = false;
+	public ImageHandle imgs[] = null;
 
-	protected Animation() {
+	public Animation() {
 	}
 
 	public Animation(String str, double stime, double etime) {
@@ -19,15 +18,18 @@ public class Animation extends Sprite {
 		this.etime = etime;
 	}
 
-	public Animation(int n, double len, boolean once, String frames[]) {
-		this.n = n;
-		this.len = len / n;
-		this.once = once;
-		this.frames = frames;
+	public Animation(int n, double duration, boolean once, String frames[]) {
+		this(n, duration, once, (ImageHandle[]) null);
 		imgs = new ImageHandle[n];
-
 		for (int i = 0; i < n; i++)
 			imgs[i] = GamePlaySpriteLibrary.get(frames[i]);
+	}
+
+	public Animation(int n, double duration, boolean once, ImageHandle imgs[]) {
+		this.n = n;
+		this.interval = duration / n;
+		this.once = once;
+		this.imgs = imgs;
 	}
 
 	public void paint(NoteChartPlayer p, double time) {
@@ -37,9 +39,11 @@ public class Animation extends Sprite {
 		if (once && (time >= etime))
 			return;
 
-		int current = (int) ((time - stime) / len);
+		int current = (int) ((time - stime) / interval);
 		current %= n;
 		img = imgs[current];
+		w = img.srcw;
+		h = img.srch;
 		super.paint(p, time);
 	}
 
@@ -49,7 +53,7 @@ public class Animation extends Sprite {
 
 	public void play(NoteChartPlayer p, double stime) {
 		this.stime = stime;
-		etime = stime + len * n;
+		etime = stime + interval * n;
 		p.addAnimation(this);
 	}
 

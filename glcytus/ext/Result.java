@@ -1,44 +1,86 @@
 package glcytus.ext;
 
-import glcytus.graphics.Sprite;
-
-import java.util.LinkedHashMap;
+import java.text.*;
+import glcytus.graphics.*;
 
 public class Result extends Base {
-	LinkedHashMap<String, Sprite> elements = new LinkedHashMap<String, Sprite>();
+	Base diff = null, perfect = null, good = null, bad = null, miss = null;
+	boolean newbest = false;
 
 	public Result() throws Exception {
-		String folder = "Application/assets/ui/Result/";
+		String folder = "assets/ui/Result/";
 		loadSprite(folder, "result_root.prefab.json");
 
-		Base diff = new Base();
+		diff = new Base();
 		diff.loadSprite(folder, "difficulty.prefab.json");
-		diff.loadAnimation(folder, "difficulty.anim.json", false, 0);
+		diff.loadMorphingAnimation(folder, "difficulty.anim.json", false, 0);
 		diff.setAnchor("BottomRight");
 		diff.moveTo(459.5, -310);
 		addElements(diff);
 		addChild(diff, false);
 
-		Base perfect = new Base();
+		perfect = new Base();
 		perfect.loadSprite(folder, "perfect.prefab.json");
-		perfect.loadAnimation(folder, "BeatStatistics.anim.json", false, 0);
+		perfect.loadMorphingAnimation(folder, "BeatStatistics.anim.json",
+				false, 0);
 		addChild(perfect, false);
 
-		Base good = new Base();
+		good = new Base();
 		good.loadSprite(folder, "good.prefab.json");
-		good.loadAnimation(folder, "BeatStatistics.anim.json", false, 0);
+		good.loadMorphingAnimation(folder, "BeatStatistics.anim.json", false, 0);
 		addChild(good, false);
 
-		Base bad = new Base();
+		bad = new Base();
 		bad.loadSprite(folder, "bad.prefab.json");
-		bad.loadAnimation(folder, "BeatStatistics.anim.json", false, 0);
+		bad.loadMorphingAnimation(folder, "BeatStatistics.anim.json", false, 0);
 		addChild(bad, false);
 
-		Base miss = new Base();
+		miss = new Base();
 		miss.loadSprite(folder, "miss.prefab.json");
-		miss.loadAnimation(folder, "BeatStatistics.anim.json", false, 0);
+		miss.loadMorphingAnimation(folder, "BeatStatistics.anim.json", false, 0);
 		addChild(miss, false);
 
-		loadAnimation(folder, "result_animation.anim.json", false, 0);
+		loadMorphingAnimation(folder, "result_animation.anim.json", false, 0);
+
+		setScore(924950);
+		setCombo(920);
+		setTP(95.24);
+		setPerfect(894);
+		setGood(26);
+		setBad(0);
+		setMiss(6);
+	}
+
+	public void setScore(double score) {
+		DecimalFormat df = new DecimalFormat("000000");
+		((FontSprite) elements.get("Score")).text = df.format(score);
+	}
+
+	public void setCombo(int combo) {
+		((FontSprite) elements.get("Combo")).text = String.valueOf(combo);
+	}
+
+	public void setTP(double tp) {
+		DecimalFormat df = new DecimalFormat("00.00");
+		((FontSprite) elements.get("TP/TP")).text = df.format(tp);
+	}
+
+	public void setPerfect(int number) {
+		((FontSprite) perfect.elements.get("Number")).text = String
+				.valueOf(number);
+	}
+
+	public void setGood(int number) {
+		((FontSprite) good.elements.get("Number")).text = String
+				.valueOf(number);
+	}
+
+	public void setBad(int number) {
+		((FontSprite) bad.elements.get("Number")).text = String.valueOf(number);
+	}
+
+	public void setMiss(int number) {
+		((FontSprite) miss.elements.get("Number")).text = String
+				.valueOf(number);
 	}
 }

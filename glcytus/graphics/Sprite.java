@@ -8,11 +8,11 @@ import java.util.LinkedList;
 public class Sprite {
 	public Sprite father = null;
 	public ImageHandle img = null;
-	public String name = null;
+	public String name = "";
 
 	// Independent states
-	public double x = 0, y = 0;
-	public double angle = 0, alpha = 1, sx = 1, sy = 1, ax = 0.5, ay = 0.5;
+	public double x = 0, y = 0, w = 0, h = 0;
+	public double angle = 0, sx = 1, sy = 1, ax = 0.5, ay = 0.5;
 	public double color[] = new double[] { 1, 1, 1, 1 };
 	public boolean flipH = false, flipV = false;
 
@@ -25,36 +25,39 @@ public class Sprite {
 
 	public Sprite(ImageHandle img) {
 		this.img = img;
+		w = img.srcw;
+		h = img.srch;
 	}
 
 	public Sprite(String name) {
 		this.name = name;
 		this.img = GamePlaySpriteLibrary.get(name);
+		w = img.srcw;
+		h = img.srch;
 	}
 
 	public void paint(NoteChartPlayer p, double time) {
-		for (Transform t : trans)
-			t.adjust(this, time);
+		updateStatus(time);
 		for (Sprite s : childs)
 			s.paint(p, time);
 
-		if (img == null)
+		if ((w == 0) || (h == 0))
 			return;
-
 		p.addRenderTask(new RenderTask(this));
+	}
+
+	public void updateStatus(double time) {
+		for (Transform t : trans)
+			t.adjust(this, time);
 	}
 
 	public AffineTransform getAffineTransform() {
 		AffineTransform t = new AffineTransform();
-		if (img == null) {
-			t.translate(x, y);
-			t.rotate(angle);
-			t.scale(sx, sy);
-		} else {
-			t.translate(x - img.srcw * sx * ax, y - img.srch * sy * ay);
-			t.rotate(angle, img.srcw * sx * ax, img.srch * sy * ay);
-			t.scale(sx, sy);
-		}
+		t.translate(x - w * sx * ax, y - h * sy * ay);
+		t.rotate(angle, w * sx * ax, h * sy * ay);
+		t.scale(sx, sy);
+		if (img != null)
+			t.scale(w / img.srcw, h / img.srch);
 		if ((!independent) && (father != null))
 			t.preConcatenate(father.getAffineTransform());
 		return t;
@@ -62,9 +65,9 @@ public class Sprite {
 
 	public double getFinalAlpha() {
 		if (father == null)
-			return Math.min(Math.max(alpha, 0), 1);
+			return Math.min(Math.max(color[3], 0), 1);
 		else
-			return father.getFinalAlpha() * Math.min(Math.max(alpha, 0), 1);
+			return father.getFinalAlpha() * Math.min(Math.max(color[3], 0), 1);
 	}
 
 	public void scale(double s) {
@@ -77,11 +80,11 @@ public class Sprite {
 	}
 
 	public void setWidth(double width) {
-		sx = width / img.srcw;
+		this.w = width;
 	}
 
 	public void setHeight(double height) {
-		sy = height / img.srch;
+		this.h = height;
 	}
 
 	public void setSize(double width, double height) {
@@ -140,7 +143,7 @@ public class Sprite {
 	}
 
 	public void setAlpha(double alpha) {
-		this.alpha = alpha;
+		this.color[3] = alpha;
 	}
 
 	public void moveTo(double x, double y) {
@@ -158,12 +161,21 @@ public class Sprite {
 
 	public void clearTransforms() {
 		trans.clear();
+		for (Sprite s : childs)
+			s.clearTransforms();
 	}
 
 	public void addChild(Sprite s, boolean independent) {
 		s.father = this;
 		s.independent = independent;
 		childs.add(s);
+	}
+
+	public Sprite getChild(String name) {
+		for (Sprite s : childs)
+			if (s.name.equals(name))
+				return s;
+		return null;
 	}
 
 	public void removeChild(Sprite s) {

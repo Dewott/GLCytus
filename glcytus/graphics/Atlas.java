@@ -1,25 +1,21 @@
 package glcytus.graphics;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import glcytus.util.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
 
 public class Atlas {
 	public Texture texture = null;
 	public HashMap<String, ImageHandle> map = new HashMap<String, ImageHandle>();
 
-	public Atlas(String folder, String filename) throws Exception {
-		texture = TextureIO.newTexture(new File(folder + filename + ".png"),
-				false);
-		JSONObject frames = JSON.parseObject(
-				readFile(folder + filename + ".json")).getJSONObject("frames");
+	public Atlas(String folder, String name) throws Exception {
+		texture = ResourceLoader.loadTexture(folder, name + ".png");
+		JSONObject frames = ResourceLoader.loadJSONObjectFromFile(folder,
+				name + ".json").getJSONObject("frames");
 
 		for (Map.Entry<String, Object> entry : frames.entrySet()) {
 			ImageHandle img = new ImageHandle();
@@ -49,17 +45,5 @@ public class Atlas {
 
 	public ImageHandle get(String part) {
 		return map.get(part);
-	}
-
-	private String readFile(String path) throws Exception {
-		BufferedReader in = new BufferedReader(new FileReader(path));
-		String str = "";
-		String s = in.readLine();
-		while (s != null) {
-			str += s;
-			s = in.readLine();
-		}
-		in.close();
-		return str;
 	}
 }

@@ -1,7 +1,7 @@
 package glcytus.graphics;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import glcytus.util.*;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +25,8 @@ public class GamePlaySpriteLibrary {
 		r1.close();
 
 		for (int i = 0; i < 5; i++) {
-			Atlas atlas = new Atlas("Application/assets/ui/GamePlay/", flist[i]);
+			Atlas atlas = ResourceLoader.loadAtlas("assets/ui/GamePlay/",
+					flist[i]);
 			if (i == 4) { // common_add
 				for (Map.Entry<String, ImageHandle> entry : atlas.map
 						.entrySet())
@@ -33,7 +34,7 @@ public class GamePlaySpriteLibrary {
 			}
 			map.putAll(atlas.map);
 		}
-		map.keySet().retainAll(objlist.keySet());
+		// map.keySet().retainAll(objlist.keySet());
 		for (Map.Entry<String, Double> entry : objlist.entrySet()) {
 			ImageHandle img = map.get(entry.getKey());
 			img.scale(entry.getValue());
