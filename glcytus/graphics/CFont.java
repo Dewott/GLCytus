@@ -3,21 +3,37 @@ package glcytus.graphics;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jogamp.opengl.util.texture.Texture;
-
 public final class CFont implements Cloneable {
 	public String name = "";
-	public Texture texture = null;
+	public Texture2D texture = null;
 	public HashMap<Integer, CharFrame> map = new HashMap<Integer, CharFrame>();
 	public HashMap<IntPair, Integer> kernings = new HashMap<IntPair, Integer>();
 	public double lineheight = 0;
 	public double sx = 1, sy = 1;
 
-	public static final class CharFrame implements Cloneable {
+	public final class CharFrame implements Cloneable {
+		public int id = 0;
 		public int w = 0, h = 0;
 		public double tx = 0, ty = 0, tw = 0, th = 0; // Texture coords
 		public int xoff = 0, yoff = 0;
 		public int xadv = 0;
+		public ImageHandle img = null;
+
+		public void updateImageHandle() {
+			img = new ImageHandle();
+			img.name = CFont.this.name + id;
+			img.texture = CFont.this.texture;
+			img.x = tx;
+			img.y = ty;
+			img.w = tw;
+			img.h = th;
+			img.srcw = w;
+			img.srch = h;
+			img.spsx = 0;
+			img.spsy = 0;
+			img.spsw = w;
+			img.spsh = h;
+		}
 
 		public CharFrame clone() {
 			CharFrame copy = new CharFrame();
@@ -48,25 +64,6 @@ public final class CFont implements Cloneable {
 		lineheight *= sy;
 		this.sx = sx;
 		this.sy = sy;
-	}
-
-	public void scale(double s) {
-		scale(s, s);
-	}
-
-	public CFont getScaledFont(double sx, double sy) {
-		if ((sx == 1) && (sy == 1))
-			return this;
-		CFont copy = clone();
-		copy.scale(sx, sy);
-		return copy;
-	}
-
-	public CFont getScaledFont(double s) {
-		if (s == 1)
-			return this;
-		else
-			return getScaledFont(s, s);
 	}
 
 	public int getStringWidth(String str) {

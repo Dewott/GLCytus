@@ -96,11 +96,11 @@ public class Click extends Note {
 			judgeanim.play(p, p.time);
 			p.notes.remove(this);
 		}
-		circle.paint(p, p.time);
+		circle.paint(p.renderer, p.time);
 		if (p.time + p.beat * 0.4 >= stime)
-			nearadd.paint(p, p.time);
+			nearadd.paint(p.renderer, p.time);
 		if (p.page < page)
-			nact.paint(p, p.time);
+			nact.paint(p.renderer, p.time);
 	}
 
 	public void judge(double time) {
@@ -108,33 +108,34 @@ public class Click extends Note {
 		Animation expanim = null;
 		Animation judgeanim = null;
 		Animation blow = new Animation(page % 2 == 0 ? "red_blow"
-				: "yellow_blow", time, time + 1 / 6.0);
+				: "yellow_blow", time, time + 1 / 3.0);
 		blow.addTransform(new Transform(Transform.ROTATION, Transform.LINEAR,
 				time, time + 1 / 6.0, 0, Math.PI));
 		blow.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR,
 				time, time + 1 / 6.0, 1, 0));
 		blow.addTransform(new Transform(Transform.SCALE, Transform.LINEAR,
-				time, time + 1 / 6.0, 1, 3));
+				time, time + 1 / 6.0, 1, 2));
 		blow.moveTo(x, y);
+		boolean blowPlay = false;
 
 		double d = Math.abs(time - stime);
 		if (d <= 0.075) {
 			judgement = 0; // Perfect TP100
 			expanim = GamePlayAnimationPreset.get("critical_explosion");
 			judgeanim = GamePlayAnimationPreset.get("judge_perfect");
-			blow.play(p);
+			blowPlay = true;
 		}
 		if ((d > 0.075) && (d <= 0.150)) {
 			judgement = 1; // Perfect TP70
 			expanim = GamePlayAnimationPreset.get("explosion");
 			judgeanim = GamePlayAnimationPreset.get("judge_perfect");
-			blow.play(p);
+			blowPlay = true;
 		}
 		if ((d > 0.150) && (d <= 0.225)) {
 			judgement = 2; // Good
 			expanim = GamePlayAnimationPreset.get("explosion");
 			judgeanim = GamePlayAnimationPreset.get("judge_good");
-			blow.play(p);
+			blowPlay = true;
 		}
 		if (d > 0.225) {
 			judgement = 3; // Bad
@@ -148,13 +149,14 @@ public class Click extends Note {
 			expanim.play(p, time);
 			// shadow.clearTransforms();
 			shadow.addTransform(new Transform(Transform.SCALE,
-					Transform.LINEAR, time, time + 1 / 3.0, 1.6, 1.6, false,
+					Transform.LINEAR, time, time + 1 / 6.0, 1.2, 1.2, false,
 					false));
 			shadow.addTransform(new Transform(Transform.ALPHA,
-					Transform.LINEAR, time, time + 1 / 3.0, 0.8, 0.3, false,
-					true));
+					Transform.LINEAR, time, time + 1 / 6.0, 0.8, 0, false, true));
 		}
 		judgeanim.moveTo(x, y);
 		judgeanim.play(p, time);
+		if (blowPlay)
+			blow.play(p);
 	}
 }

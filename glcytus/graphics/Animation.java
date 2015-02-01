@@ -4,9 +4,12 @@ import glcytus.NoteChartPlayer;
 
 public class Animation extends Sprite {
 	public int n = 1;
-	public double stime = 0, etime = 0;
+	public static final int STATUS_PLAY = 0, STATUS_STOP = 1;
+	public int status = STATUS_PLAY;
+	public double stime = 0, etime = -1;
 	public double interval = 1;
-	public boolean once = false;
+	public boolean once = false, reversed = false;
+	public int stopAt = -1;
 	public ImageHandle imgs[] = null;
 
 	public Animation() {
@@ -18,13 +21,6 @@ public class Animation extends Sprite {
 		this.etime = etime;
 	}
 
-	public Animation(int n, double duration, boolean once, String frames[]) {
-		this(n, duration, once, (ImageHandle[]) null);
-		imgs = new ImageHandle[n];
-		for (int i = 0; i < n; i++)
-			imgs[i] = GamePlaySpriteLibrary.get(frames[i]);
-	}
-
 	public Animation(int n, double duration, boolean once, ImageHandle imgs[]) {
 		this.n = n;
 		this.interval = duration / n;
@@ -32,19 +28,11 @@ public class Animation extends Sprite {
 		this.imgs = imgs;
 	}
 
-	public void paint(NoteChartPlayer p, double time) {
-		if (time < stime)
-			return;
-
-		if (once && (time >= etime))
-			return;
-
-		int current = (int) ((time - stime) / interval);
-		current %= n;
-		img = imgs[current];
-		w = img.srcw;
-		h = img.srch;
-		super.paint(p, time);
+	public Animation(int n, double duration, boolean once, String frames[]) {
+		this(n, duration, once, (ImageHandle[]) null);
+		imgs = new ImageHandle[n];
+		for (int i = 0; i < n; i++)
+			imgs[i] = GamePlaySpriteLibrary.get(frames[i]);
 	}
 
 	public void play(NoteChartPlayer p) {
@@ -55,6 +43,39 @@ public class Animation extends Sprite {
 		this.stime = stime;
 		etime = stime + interval * n;
 		p.addAnimation(this);
+	}
+
+	public void playToAndStop(int frame) {
+		this.stopAt = frame;
+		this.status = STATUS_PLAY;
+	}
+
+	public int getCurrentFrame(double time) {
+		int frame = 0;
+		if (time > stime) {
+			if ((etime != -1) && (time > etime) && once)
+				frame = n - 1;
+			else
+				frame = (int) ((time - stime) / interval) % n;
+		}
+		if (reversed)
+			frame = (n - 1) - frame;
+		return frame;
+	}
+
+	public void paint(Renderer r, double time) {
+		if (time < stime)
+			return;
+		if (once && (etime != -1) && (time >= etime))
+			return;
+
+		if (status == STATUS_PLAY) {
+			int current = getCurrentFrame(time);
+			if (current == stopAt)
+				status = STATUS_STOP;
+			updateImage(imgs[current]);
+		}
+		super.paint(r, time);
 	}
 
 	public void setStartTime(double stime) {

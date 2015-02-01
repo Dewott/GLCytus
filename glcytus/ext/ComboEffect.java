@@ -1,23 +1,24 @@
 package glcytus.ext;
 
-import glcytus.util.*;
-import glcytus.graphics.*;
+import glcytus.graphics.MorphingAnimation;
+import glcytus.graphics.TextSprite;
+import glcytus.util.ResourceLoader;
 
 public class ComboEffect extends Base {
 	Base back = null;
-	FontSprite text1 = null, text2 = null;
+	TextSprite text1 = null, text2 = null;
 	MorphingAnimation frontanim = null, backanim = null;
 
 	public ComboEffect() throws Exception {
 		String folder = "assets/ui/GamePlay/";
 		loadSprite(folder, "combo_effect.prefab.json");
-		text1 = (FontSprite) elements.get("text");
+		text1 = (TextSprite) elements.get("text");
 		text1.setAnchor("Center");
 		text1.moveTo(0, 150);
 
 		back = new Base();
 		back.loadSprite(folder, "combo_effect.prefab.json");
-		text2 = (FontSprite) back.elements.get("text");
+		text2 = (TextSprite) back.elements.get("text");
 		text2.setAnchor("Center");
 		text2.moveTo(0, 150);
 		backanim = ResourceLoader.loadMorphingAnimation(folder,
@@ -33,7 +34,7 @@ public class ComboEffect extends Base {
 		back.clearTransforms();
 		frontanim.use(elements, time);
 		backanim.use(back.elements, time);
-		text1.text = String.valueOf(combo);
-		text2.text = String.valueOf(combo);
+		text1.setText(String.valueOf(combo));
+		text2.setText(String.valueOf(combo));
 	}
 }

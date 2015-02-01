@@ -1,7 +1,7 @@
 package glcytus.ext;
 
-import glcytus.util.*;
-import glcytus.graphics.*;
+import glcytus.graphics.MorphingAnimation;
+import glcytus.util.ResourceLoader;
 
 public class ChapterSelector extends Base {
 	MorphingAnimation enteranim = null, switchanim = null, backanim = null;

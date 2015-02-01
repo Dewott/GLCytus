@@ -21,6 +21,7 @@ public class Main extends JFrame {
 		try {
 			Thread.sleep(3000);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		p.start();
 	}

@@ -29,18 +29,9 @@ public class Drag extends Note {
 	public double calcAngle(int p, int q) {
 		Node n1 = nodes.get(p);
 		Node n2 = nodes.get(q);
-		if (n1.x == n2.x) {
-			if (n2.y > n1.y)
-				return 0;
-			else
-				return Math.PI;
-		}
-		double angle = Math.atan(Math.abs(n2.x - n1.x) / (n2.y - n1.y));
-		if (angle < 0)
-			angle += Math.PI;
-		if (n2.x > n1.x)
-			angle = -angle;
-		return angle;
+		double x = n2.x - n1.x;
+		double y = n2.y - n1.y;
+		return Math.atan2(y, x) - Math.PI / 2.0;
 	}
 
 	public void paint() {
@@ -57,8 +48,8 @@ public class Drag extends Note {
 					Sprite dragline = new Sprite("drag_line");
 					dragline.moveTo(x, y);
 					dragline.setHeight(len);
-					dragline.rotate(angle);
-					dragline.paint(p, p.time);
+					dragline.rotate(angle, 0, 0);
+					dragline.paint(p.renderer, p.time);
 				}
 
 			for (i = 0; i < n; i++)
@@ -73,7 +64,7 @@ public class Drag extends Note {
 					if (lastnode.judgement != -1) {
 						dlight.moveTo(lastnode.x, lastnode.y);
 						dlight.addTransform(new Transform(Transform.ROTATION,
-								Transform.LINEAR, etime, etime + 1 / 3.0, 0,
+								Transform.LINEAR, etime, etime + 1 / 4.0, 0,
 								Math.PI));
 						blow.addChild(dlight, true);
 						arrexp.play(p);
@@ -93,18 +84,18 @@ public class Drag extends Note {
 					.get(i - 1).y);
 			double angle = calcAngle(i - 1, i);
 			shadow.moveTo(cx, cy);
-			shadow.rotate(angle);
-			shadow.paint(p, p.time);
+			shadow.rotate(angle, 0, 0);
+			shadow.paint(p.renderer, p.time);
 			head.moveTo(cx, cy);
-			head.paint(p, p.time);
+			head.paint(p.renderer, p.time);
 			nearadd.moveTo(cx, cy);
-			nearadd.paint(p, p.time);
+			nearadd.paint(p.renderer, p.time);
 			arrow.moveTo(cx, cy);
-			arrow.rotate(angle);
-			arrow.paint(p, p.time);
+			arrow.rotate(angle, 0, 0);
+			arrow.paint(p.renderer, p.time);
 			dlight.moveTo(cx, cy);
-			dlight.rotate(angle);
-			dlight.paint(p, p.time);
+			dlight.rotate(angle, 0, 0);
+			dlight.paint(p.renderer, p.time);
 		} else {
 			int end = n;
 			for (i = 1; i < n; i++)
@@ -122,20 +113,20 @@ public class Drag extends Note {
 				Sprite dragline = new Sprite("drag_line");
 				dragline.moveTo(x, y);
 				dragline.setHeight(len);
-				dragline.rotate(angle);
-				dragline.paint(p, p.time);
+				dragline.rotate(angle, 0, 0);
+				dragline.paint(p.renderer, p.time);
 			}
 
 			head.moveTo(nodes.get(0).x, nodes.get(0).y);
-			head.paint(p, p.time);
+			head.paint(p.renderer, p.time);
 			nearadd.moveTo(nodes.get(0).x, nodes.get(0).y);
 			if (p.time + p.beat * 0.4 >= nodes.get(0).stime)
-				nearadd.paint(p, p.time);
+				nearadd.paint(p.renderer, p.time);
 
 			if (p.page == page) {
 				arrow.moveTo(nodes.get(0).x, nodes.get(0).y);
-				arrow.rotate(calcAngle(0, 1));
-				arrow.paint(p, p.time);
+				arrow.rotate(calcAngle(0, 1), 0, 0);
+				arrow.paint(p.renderer, p.time);
 			}
 		}
 	}
@@ -171,16 +162,16 @@ public class Drag extends Note {
 		}
 
 		arrexp.moveTo(nodes.get(n - 1).x, nodes.get(n - 1).y);
-		arrexp.rotate(calcAngle(n - 2, n - 1));
-		blow = new Animation("drag_head_blow", etime, etime + 1 / 3.0);
+		arrexp.rotate(calcAngle(n - 2, n - 1), 0, 0);
+		blow = new Animation("drag_head_blow", etime, etime + 1 / 6.0);
 		blow.moveTo(nodes.get(n - 1).x, nodes.get(n - 1).y);
 		blow.clearTransforms();
 		blow.addTransform(new Transform(Transform.ROTATION, Transform.LINEAR,
-				etime, etime + 1 / 3.0, 0, Math.PI * 1.5));
+				etime, etime + 1 / 4.0, 0, Math.PI * 1.5));
 		blow.addTransform(new Transform(Transform.SCALE, Transform.LINEAR,
-				etime, etime + 1 / 3.0, 1, 2));
+				etime, etime + 1 / 4.0, 1, 2));
 		blow.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR,
-				etime, etime + 1 / 3.0, 1, 0.5));
+				etime, etime + 1 / 4.0, 1, 0.5));
 	}
 
 	public void judge(double time) {
@@ -230,11 +221,11 @@ public class Drag extends Note {
 			}
 			if (page == p.page) {
 				if (nflash.ended(p.time))
-					ps.paint(p, p.time);
+					ps.paint(p.renderer, p.time);
 				else
-					nflash.paint(p, p.time);
+					nflash.paint(p.renderer, p.time);
 			} else
-				nps.paint(p, p.time);
+				nps.paint(p.renderer, p.time);
 
 			if (p.time > stime + 0.3) {
 				p.addCombo(-1); // Miss

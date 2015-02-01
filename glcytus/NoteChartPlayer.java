@@ -1,18 +1,25 @@
 package glcytus;
 
-import static javax.media.opengl.GL.GL_BLEND;
-import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static javax.media.opengl.GL.GL_DEPTH_TEST;
-import static javax.media.opengl.GL.GL_TEXTURE_2D;
-import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
-import glcytus.ext.*;
-import glcytus.graphics.*;
+import glcytus.ext.ComboEffect;
+import glcytus.ext.SelectCover;
+import glcytus.graphics.AdvancedGLRenderer;
+import glcytus.graphics.Animation;
+import glcytus.graphics.ComboSmallPopTransform;
+import glcytus.graphics.GamePlayAnimationPreset;
+import glcytus.graphics.GamePlayFontLibrary;
+import glcytus.graphics.GamePlaySpriteLibrary;
+import glcytus.graphics.MaskBeatTransform;
+import glcytus.graphics.RenderTask;
+import glcytus.graphics.Sprite;
+import glcytus.graphics.TextSprite;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 
 import javax.media.Manager;
 import javax.media.MediaLocator;
@@ -23,13 +30,12 @@ import javax.media.opengl.GLEventListener;
 
 import javazoom.jl.converter.Converter;
 
-import com.jogamp.opengl.util.texture.Texture;
-
 public class NoteChartPlayer implements GLEventListener {
 	LinkedList<Animation> animq = new LinkedList<Animation>();
 	LinkedList<RenderTask> taskq = new LinkedList<RenderTask>();
 
-	Player mplayer = null; // Media Player
+	public Player mplayer = null; // Media Player
+	public AdvancedGLRenderer renderer = null;
 
 	String songtitle = null;
 	NoteChart pdata = null;
@@ -43,7 +49,7 @@ public class NoteChartPlayer implements GLEventListener {
 	Sprite combosmallbg = null, combosmalltext = null;
 	ComboSmallPopTransform poptrans = null;
 	ComboEffect comboeffect = null;
-	FontSprite fscore = null, fcombosmall = null;
+	TextSprite fscore = null, fcombosmall = null;
 	Sprite scanline = null;
 
 	int combo = 0, maxcombo = 0;
@@ -74,14 +80,8 @@ public class NoteChartPlayer implements GLEventListener {
 
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
-		gl.glMatrixMode(GL_MODELVIEW);
-		gl.glLoadIdentity();
 		gl.glViewport(0, 0, 1024, 683);
-		gl.glOrtho(-512, 512, -341.5, 341.5, 1, -1);
-		gl.glClearColor(1, 1, 1, 1);
-		gl.glEnable(GL_BLEND);
-		gl.glEnable(GL_TEXTURE_2D);
-		gl.glDisable(GL_DEPTH_TEST);
+		renderer = new AdvancedGLRenderer(gl);
 		try {
 			GamePlaySpriteLibrary.init();
 			GamePlayAnimationPreset.init();
@@ -99,6 +99,7 @@ public class NoteChartPlayer implements GLEventListener {
 			e.printStackTrace();
 			bg = new Sprite();
 		}
+		renderer.finish();
 
 		bgmask1 = new Sprite("gameplay_bg_mask");
 		bgmask1.setSize(1024, 683);
@@ -135,7 +136,7 @@ public class NoteChartPlayer implements GLEventListener {
 		titlemaskflip.setAnchor("TopRight");
 		titlemaskflip.moveTo(512, 341.5);
 
-		fscore = new FontSprite("BoltonBold", "0000000");
+		fscore = new TextSprite("BoltonBold", "0000000");
 		fscore.scale(4.0 / 3.0);
 		fscore.color = GamePlayFontLibrary.scorecolor;
 		fscore.setAnchor("TopRight");
@@ -147,7 +148,7 @@ public class NoteChartPlayer implements GLEventListener {
 		combosmalltext = new Sprite("combo_small_text");
 		combosmalltext.moveTo(-70, 273.5);
 
-		fcombosmall = new FontSprite("ComboSmall");
+		fcombosmall = new TextSprite("ComboSmall");
 		fcombosmall.moveTo(70, 271);
 
 		poptrans = new ComboSmallPopTransform();
@@ -193,6 +194,8 @@ public class NoteChartPlayer implements GLEventListener {
 	}
 
 	public void start() {
+		while (!renderer.isInitialized())
+			;
 		mplayer.start();
 	}
 
@@ -263,27 +266,24 @@ public class NoteChartPlayer implements GLEventListener {
 	}
 
 	public void display(GLAutoDrawable drawable) {
-		GL2 gl = drawable.getGL().getGL2();
-		gl.glClear(GL_COLOR_BUFFER_BIT);
-
 		time = mplayer.getMediaTime().getSeconds();
 		page = calcPage(time);
 		double liney = calcY(time);
 
-		bg.paint(this, 10); // 10 seconds
-		bgmask1.paint(this, time);
-		bgmask2.paint(this, time);
-		bgmask3.paint(this, time);
-		bgmask3flip.paint(this, time);
-		titlemask.paint(this, time);
-		titlemaskflip.paint(this, time);
-		title.paint(this, time);
+		bg.paint(renderer, 10); // 10 seconds
+		bgmask1.paint(renderer, time);
+		bgmask2.paint(renderer, time);
+		bgmask3.paint(renderer, time);
+		bgmask3flip.paint(renderer, time);
+		titlemask.paint(renderer, time);
+		titlemaskflip.paint(renderer, time);
+		title.paint(renderer, time);
 		if (combo > 1) {
-			combosmallbg.paint(this, time);
-			combosmalltext.paint(this, time);
-			fcombosmall.text = String.valueOf(combo);
-			fcombosmall.paint(this, time);
-			comboeffect.paint(this, time);
+			combosmallbg.paint(renderer, time);
+			combosmalltext.paint(renderer, time);
+			fcombosmall.setText(String.valueOf(combo));
+			fcombosmall.paint(renderer, time);
+			comboeffect.paint(renderer, time);
 		}
 
 		LinkedList<Animation> del = new LinkedList<Animation>();
@@ -291,8 +291,7 @@ public class NoteChartPlayer implements GLEventListener {
 			if (anim.getEndTime() < time)
 				del.add(anim);
 			else if (anim.getStartTime() <= time) {
-				anim.paint(this, time);
-				flushTaskQueue(gl);
+				anim.paint(renderer, time);
 			}
 		}
 		animq.removeAll(del);
@@ -308,40 +307,16 @@ public class NoteChartPlayer implements GLEventListener {
 			for (i = end; i >= 0; i--) {
 				Note n = notes.get(i);
 				n.paint();
-				flushTaskQueue(gl);
 			}
 		}
 
-		fscore.text = new DecimalFormat("0000000").format(score);
-		fscore.paint(this, time);
+		fscore.setText(new DecimalFormat("0000000").format(score));
+		fscore.paint(renderer, time);
 
 		scanline.moveTo(0, liney);
-		scanline.paint(this, time);
+		scanline.paint(renderer, time);
 
-		flushTaskQueue(gl);
-	}
-
-	public void flushTaskQueue(GL2 gl) {
-		Texture cur = null;
-		LinkedList<RenderTask> del = new LinkedList<RenderTask>();
-		while (taskq.size() > 0) {
-			if (taskq.getFirst().img == null) {
-				gl.glBindTexture(GL_TEXTURE_2D, 0);
-				taskq.getFirst().paint(gl);
-				del.add(taskq.getFirst());
-			} else {
-				cur = taskq.getFirst().img.texture;
-				cur.bind(gl);
-				for (RenderTask task : taskq)
-					if ((task.img != null) && (cur == task.img.texture)) {
-						task.paint(gl);
-						del.add(task);
-					}
-			}
-			taskq.removeAll(del);
-			del.clear();
-		}
-		gl.glFlush();
+		renderer.flushTaskQueue();
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,

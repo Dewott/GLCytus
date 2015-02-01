@@ -1,11 +1,6 @@
 package glcytus.graphics;
 
-import static javax.media.opengl.GL.GL_ONE;
-import static javax.media.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
-import static javax.media.opengl.GL.GL_SRC_ALPHA;
-import static javax.media.opengl.GL2GL3.GL_QUADS;
-
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.math.Matrix4;
 
 public class RenderTask {
 	public ImageHandle img = null;
@@ -16,9 +11,10 @@ public class RenderTask {
 
 	public RenderTask(Sprite s) {
 		double srcPts[] = new double[8];
+		this.blendingAdd = s.blendingAdd;
 		if (s.img != null) {
 			this.img = s.img;
-			blendingAdd = s.img.blendingAdd;
+			blendingAdd |= s.img.blendingAdd;
 			System.arraycopy(img.getPts(), 0, srcPts, 0, 8);
 			if (s.flipH) {
 				srcPts[0] = img.srcw - srcPts[0];
@@ -43,45 +39,16 @@ public class RenderTask {
 			srcPts[6] = s.w;
 			srcPts[7] = s.h;
 		}
-		s.getAffineTransform().transform(srcPts, 0, dstPts, 0, 4);
+		Matrix4 mat = s.getTransformMatrix();
+		for (int i = 0; i < 4; i++) {
+			float src[] = new float[] { (float) srcPts[i * 2],
+					(float) srcPts[i * 2 + 1], 0f, 1f };
+			float dst[] = new float[4];
+			mat.multVec(src, dst);
+			dstPts[i * 2] = dst[0];
+			dstPts[i * 2 + 1] = dst[1];
+		}
 		System.arraycopy(s.color, 0, color, 0, 3);
 		color[3] = s.getFinalAlpha();
-	}
-
-	public void paint(GL2 gl) {
-		gl.glColor4dv(color, 0);
-		if (img != null) {
-			if (blendingAdd)
-				gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			else
-				gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			gl.glBegin(GL_QUADS);
-			// Vertex 1
-			gl.glTexCoord2d(texPts[0], texPts[1]);
-			gl.glVertex2d(dstPts[0], dstPts[1]);
-			// Vertex 2
-			gl.glTexCoord2d(texPts[2], texPts[3]);
-			gl.glVertex2d(dstPts[2], dstPts[3]);
-			// Vertex 3
-			gl.glTexCoord2d(texPts[4], texPts[5]);
-			gl.glVertex2d(dstPts[4], dstPts[5]);
-			// Vertex 4
-			gl.glTexCoord2d(texPts[6], texPts[7]);
-			gl.glVertex2d(dstPts[6], dstPts[7]);
-			gl.glEnd();
-		} else {
-			gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			gl.glBegin(GL_QUADS);
-			// Vertex 1
-			gl.glVertex2d(dstPts[0], dstPts[1]);
-			// Vertex 2
-			gl.glVertex2d(dstPts[2], dstPts[3]);
-			// Vertex 3
-			gl.glVertex2d(dstPts[4], dstPts[5]);
-			// Vertex 4
-			gl.glVertex2d(dstPts[6], dstPts[7]);
-			gl.glEnd();
-		}
 	}
 }

@@ -1,6 +1,7 @@
 package glcytus.graphics;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class LoopTransform extends Transform {
 	public LinkedList<Transform> child = new LinkedList<Transform>();

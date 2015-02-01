@@ -1,7 +1,8 @@
 package glcytus.ext;
 
-import java.text.*;
-import glcytus.graphics.*;
+import glcytus.graphics.TextSprite;
+
+import java.text.DecimalFormat;
 
 public class Result extends Base {
 	Base diff = null, perfect = null, good = null, bad = null, miss = null;
@@ -53,34 +54,34 @@ public class Result extends Base {
 
 	public void setScore(double score) {
 		DecimalFormat df = new DecimalFormat("000000");
-		((FontSprite) elements.get("Score")).text = df.format(score);
+		((TextSprite) elements.get("Score")).text = df.format(score);
 	}
 
 	public void setCombo(int combo) {
-		((FontSprite) elements.get("Combo")).text = String.valueOf(combo);
+		((TextSprite) elements.get("Combo")).text = String.valueOf(combo);
 	}
 
 	public void setTP(double tp) {
 		DecimalFormat df = new DecimalFormat("00.00");
-		((FontSprite) elements.get("TP/TP")).text = df.format(tp);
+		((TextSprite) elements.get("TP/TP")).text = df.format(tp);
 	}
 
 	public void setPerfect(int number) {
-		((FontSprite) perfect.elements.get("Number")).text = String
+		((TextSprite) perfect.elements.get("Number")).text = String
 				.valueOf(number);
 	}
 
 	public void setGood(int number) {
-		((FontSprite) good.elements.get("Number")).text = String
+		((TextSprite) good.elements.get("Number")).text = String
 				.valueOf(number);
 	}
 
 	public void setBad(int number) {
-		((FontSprite) bad.elements.get("Number")).text = String.valueOf(number);
+		((TextSprite) bad.elements.get("Number")).text = String.valueOf(number);
 	}
 
 	public void setMiss(int number) {
-		((FontSprite) miss.elements.get("Number")).text = String
+		((TextSprite) miss.elements.get("Number")).text = String
 				.valueOf(number);
 	}
 }

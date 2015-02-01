@@ -1,6 +1,6 @@
 package glcytus.graphics;
 
-import glcytus.util.*;
+import glcytus.util.ResourceLoader;
 
 import java.util.HashMap;
 

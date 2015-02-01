@@ -1,7 +1,7 @@
 package glcytus.ext;
 
-import glcytus.graphics.*;
-import glcytus.util.*;
+import glcytus.graphics.MorphingAnimation;
+import glcytus.util.ResourceLoader;
 
 public class Loading extends Base {
 	MorphingAnimation enteranim = null, loopanim = null, leaveanim = null;

@@ -1,9 +1,8 @@
 package glcytus.graphics;
 
-import glcytus.NoteChartPlayer;
-
-import java.awt.geom.AffineTransform;
 import java.util.LinkedList;
+
+import com.jogamp.opengl.math.Matrix4;
 
 public class Sprite {
 	public Sprite father = null;
@@ -11,10 +10,11 @@ public class Sprite {
 	public String name = "";
 
 	// Independent states
-	public double x = 0, y = 0, w = 0, h = 0;
-	public double angle = 0, sx = 1, sy = 1, ax = 0.5, ay = 0.5;
+	public double x = 0, y = 0, z = 0, w = 0, h = 0;
+	public double sx = 1, sy = 1, ax = 0.5, ay = 0.5;
+	public double rotationAngle[] = new double[] { 0, 0, 0 };
 	public double color[] = new double[] { 1, 1, 1, 1 };
-	public boolean flipH = false, flipV = false;
+	public boolean flipH = false, flipV = false, blendingAdd = false;
 
 	public LinkedList<Transform> trans = new LinkedList<Transform>();
 	public LinkedList<Sprite> childs = new LinkedList<Sprite>();
@@ -24,26 +24,28 @@ public class Sprite {
 	}
 
 	public Sprite(ImageHandle img) {
+		updateImage(img);
+	}
+
+	public Sprite(String name) {
+		this.name = name;
+		updateImage(GamePlaySpriteLibrary.get(name));
+	}
+
+	public void updateImage(ImageHandle img) {
 		this.img = img;
 		w = img.srcw;
 		h = img.srch;
 	}
 
-	public Sprite(String name) {
-		this.name = name;
-		this.img = GamePlaySpriteLibrary.get(name);
-		w = img.srcw;
-		h = img.srch;
-	}
-
-	public void paint(NoteChartPlayer p, double time) {
+	public void paint(Renderer r, double time) {
 		updateStatus(time);
 		for (Sprite s : childs)
-			s.paint(p, time);
+			s.paint(r, time);
 
 		if ((w == 0) || (h == 0))
 			return;
-		p.addRenderTask(new RenderTask(this));
+		r.addRenderTask(new RenderTask(this));
 	}
 
 	public void updateStatus(double time) {
@@ -51,16 +53,23 @@ public class Sprite {
 			t.adjust(this, time);
 	}
 
-	public AffineTransform getAffineTransform() {
-		AffineTransform t = new AffineTransform();
-		t.translate(x - w * sx * ax, y - h * sy * ay);
-		t.rotate(angle, w * sx * ax, h * sy * ay);
-		t.scale(sx, sy);
+	public Matrix4 getTransformMatrix() {
+		Matrix4 mat = new Matrix4();
+		mat.loadIdentity();
+		mat.translate((float) x, (float) y, (float) z);
+		mat.rotate((float) rotationAngle[0], 0f, 0f, 1f);
+		mat.rotate((float) rotationAngle[1], 0f, 1f, 0f);
+		mat.rotate((float) rotationAngle[2], 1f, 0f, 0f);
+		mat.translate((float) (-w * sx * ax), (float) (-h * sy * ay), 0f);
+		mat.scale((float) sx, (float) sy, 1f);
 		if (img != null)
-			t.scale(w / img.srcw, h / img.srch);
-		if ((!independent) && (father != null))
-			t.preConcatenate(father.getAffineTransform());
-		return t;
+			mat.scale((float) (w / img.srcw), (float) (h / img.srch), 1f);
+		if ((!independent) && (father != null)) {
+			Matrix4 prev = father.getTransformMatrix();
+			prev.multMatrix(mat);
+			return prev;
+		} else
+			return mat;
 	}
 
 	public double getFinalAlpha() {
@@ -92,8 +101,10 @@ public class Sprite {
 		setHeight(height);
 	}
 
-	public void rotate(double angle) {
-		this.angle = angle;
+	public void rotate(double a, double b, double y) {
+		this.rotationAngle[0] = a;
+		this.rotationAngle[1] = b;
+		this.rotationAngle[2] = y;
 	}
 
 	public void setAnchor(double ax, double ay) {
@@ -149,6 +160,12 @@ public class Sprite {
 	public void moveTo(double x, double y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public void moveTo(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	public void addTransform(Transform t) {

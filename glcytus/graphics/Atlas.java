@@ -1,15 +1,14 @@
 package glcytus.graphics;
 
-import glcytus.util.*;
+import glcytus.util.ResourceLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jogamp.opengl.util.texture.Texture;
 
 public class Atlas {
-	public Texture texture = null;
+	public Texture2D texture = null;
 	public HashMap<String, ImageHandle> map = new HashMap<String, ImageHandle>();
 
 	public Atlas(String folder, String name) throws Exception {
@@ -24,10 +23,10 @@ public class Atlas {
 
 			JSONObject part = (JSONObject) entry.getValue();
 			JSONObject fpos = part.getJSONObject("frame");
-			img.x = fpos.getIntValue("x") / (double) texture.getWidth();
-			img.y = fpos.getIntValue("y") / (double) texture.getHeight();
-			img.w = fpos.getIntValue("w") / (double) texture.getWidth();
-			img.h = fpos.getIntValue("h") / (double) texture.getHeight();
+			img.x = fpos.getIntValue("x");
+			img.y = fpos.getIntValue("y");
+			img.w = fpos.getIntValue("w");
+			img.h = fpos.getIntValue("h");
 
 			JSONObject srcsize = part.getJSONObject("sourceSize");
 			img.srcw = srcsize.getIntValue("w");
@@ -38,6 +37,9 @@ public class Atlas {
 			img.spsy = sprsrcsize.getIntValue("y");
 			img.spsw = sprsrcsize.getIntValue("w");
 			img.spsh = sprsrcsize.getIntValue("h");
+
+			if (part.containsKey("rotated"))
+				img.rotated = part.getBoolean("rotated");
 
 			map.put(img.name, img);
 		}

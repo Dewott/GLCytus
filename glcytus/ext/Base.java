@@ -1,7 +1,9 @@
 package glcytus.ext;
 
-import glcytus.graphics.*;
-import glcytus.util.*;
+import glcytus.graphics.MorphingAnimation;
+import glcytus.graphics.Sprite;
+import glcytus.util.ResourceLoader;
+
 import java.util.LinkedHashMap;
 
 public class Base extends Sprite {

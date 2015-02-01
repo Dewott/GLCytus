@@ -46,7 +46,7 @@ public class Transform implements Cloneable {
 			s.color[3] = val;
 			break;
 		case ROTATION:
-			s.angle = val;
+			s.rotationAngle[0] = val;
 			break;
 		case SX:
 			s.sx = val;

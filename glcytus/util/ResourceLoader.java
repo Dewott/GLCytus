@@ -1,18 +1,36 @@
 package glcytus.util;
 
-import glcytus.graphics.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.regex.*;
-import com.jogamp.opengl.util.texture.*;
-import com.alibaba.fastjson.*;
+import glcytus.graphics.Animation;
+import glcytus.graphics.Atlas;
+import glcytus.graphics.CFont;
+import glcytus.graphics.ImageHandle;
+import glcytus.graphics.MorphingAnimation;
+import glcytus.graphics.Renderer;
+import glcytus.graphics.Sprite;
+import glcytus.graphics.TextSprite;
+import glcytus.graphics.Texture2D;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.media.opengl.GLProfile;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.jogamp.opengl.util.texture.TextureData;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 public class ResourceLoader {
 	static HashMap<String, CFont> fonts = new HashMap<String, CFont>();
 	static HashMap<String, Animation> anims = new HashMap<String, Animation>();
 	static HashMap<String, Atlas> atlasmap = new HashMap<String, Atlas>();
-	static HashMap<String, Texture> textures = new HashMap<String, Texture>();
+	static HashMap<String, Texture2D> textures = new HashMap<String, Texture2D>();
 	static HashMap<String, MorphingAnimation> mpanims = new HashMap<String, MorphingAnimation>();
 
 	public static CFont loadFont(String folder, String name) throws Exception {
@@ -37,27 +55,25 @@ public class ResourceLoader {
 		r.readLine();
 		str = r.readLine();
 		while (str.indexOf("char") != -1) {
-			CFont.CharFrame frame = new CFont.CharFrame();
+			CFont.CharFrame frame = font.new CharFrame();
 			Matcher m = p.matcher(str);
 			m.find();
 			// char id
-			int id = Integer.parseInt(m.group());
+			frame.id = Integer.parseInt(m.group());
 			m.find();
 			// x
-			frame.tx = Integer.parseInt(m.group())
-					/ (double) font.texture.getImageWidth();
+			frame.tx = Integer.parseInt(m.group());
 			m.find();
 			// y
-			frame.ty = Integer.parseInt(m.group())
-					/ (double) font.texture.getImageHeight();
+			frame.ty = Integer.parseInt(m.group());
 			m.find();
 			// w
 			frame.w = Integer.parseInt(m.group());
-			frame.tw = frame.w / (double) font.texture.getImageWidth();
+			frame.tw = frame.w;
 			m.find();
 			// h
 			frame.h = Integer.parseInt(m.group());
-			frame.th = frame.h / (double) font.texture.getImageHeight();
+			frame.th = frame.h;
 			m.find();
 			// xoff
 			frame.xoff = Integer.parseInt(m.group());
@@ -68,7 +84,8 @@ public class ResourceLoader {
 			// xadv
 			frame.xadv = Integer.parseInt(m.group());
 
-			font.map.put(id, frame);
+			frame.updateImageHandle();
+			font.map.put(frame.id, frame);
 			str = r.readLine();
 			if (str == null)
 				break;
@@ -131,7 +148,7 @@ public class ResourceLoader {
 			s = new Sprite();
 		if (obj.containsKey("Font")) {
 			CFont font = loadFont(folder, obj.getString("Font"));
-			s = new FontSprite(font, obj.getString("Text"));
+			s = new TextSprite(font, obj.getString("Text"));
 		}
 		s.name = obj.getString("Name");
 		s.x = obj.getDoubleValue("X");
@@ -141,10 +158,10 @@ public class ResourceLoader {
 			img.texture = loadTexture(folder, obj.getString("Texture"));
 			img.x = 0;
 			img.y = 0;
-			img.w = 1;
-			img.h = 1;
-			img.srcw = img.texture.getImageWidth();
-			img.srch = img.texture.getImageHeight();
+			img.w = img.texture.getWidth();
+			img.h = img.texture.getHeight();
+			img.srcw = img.texture.getWidth();
+			img.srch = img.texture.getHeight();
 			img.spsx = 0;
 			img.spsy = 0;
 			img.spsw = img.srcw;
@@ -171,7 +188,7 @@ public class ResourceLoader {
 				s.img.setHeight(s.h);
 		}
 		if (obj.containsKey("Rotation"))
-			s.angle = Math.toRadians(obj.getDoubleValue("Rotation"));
+			s.rotationAngle[0] = Math.toRadians(obj.getDoubleValue("Rotation"));
 		if (obj.containsKey("ScaleX"))
 			s.sx = obj.getDoubleValue("ScaleX");
 		if (obj.containsKey("ScaleY"))
@@ -210,13 +227,16 @@ public class ResourceLoader {
 		return s;
 	}
 
-	public static Texture loadTexture(String folder, String name)
+	public static Texture2D loadTexture(String folder, String name)
 			throws Exception {
 		File f = getFile(folder, name);
 		if (textures.containsKey(f.getName()))
 			return textures.get(f.getName());
-		Texture t = TextureIO.newTexture(f, false);
+		TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), f,
+				false, f.getName().split("\\.")[1]);
+		Texture2D t = new Texture2D(data);
 		textures.put(f.getName(), t);
+		Renderer.currentInstance.addTexture(t);
 		return t;
 	}
 

@@ -87,11 +87,11 @@ public class Hold extends Note {
 				}
 			}
 			bar.setHeight(Math.abs(y2 - y));
-			bar.paint(p, p.time);
-			nearadd.paint(p, p.time);
-			hold1.paint(p, p.time);
-			hold2.paint(p, p.time);
-			bshadow.paint(p, p.time);
+			bar.paint(p.renderer, p.time);
+			nearadd.paint(p.renderer, p.time);
+			hold1.paint(p.renderer, p.time);
+			hold2.paint(p.renderer, p.time);
+			bshadow.paint(p.renderer, p.time);
 
 			if (judgetime1 == -1) {
 				if (p.time - stime > 0.3) {
@@ -108,11 +108,11 @@ public class Hold extends Note {
 			} else {
 				double liney = p.calcY(p.time);
 				shadow.moveTo(x, liney);
-				shadow.paint(p, p.time);
+				shadow.paint(p.renderer, p.time);
 				light2.moveTo(x, liney);
-				light2.paint(p, p.time);
+				light2.paint(p.renderer, p.time);
 				light.moveTo(x, liney);
-				light.paint(p, p.time);
+				light.paint(p.renderer, p.time);
 				if (p.time > etime)
 					judge(etime);
 				if ((judgetime2 != -1) && (p.time > judgetime2)) {
@@ -127,11 +127,11 @@ public class Hold extends Note {
 
 			double liney = p.calcY(time);
 			bar.setHeight(Math.abs(liney - y));
-			bar.paint(p, p.time);
-			head.paint(p, p.time);
+			bar.paint(p.renderer, p.time);
+			head.paint(p.renderer, p.time);
 
 			if (p.page < page)
-				nact.paint(p, p.time);
+				nact.paint(p.renderer, p.time);
 
 		}
 	}
