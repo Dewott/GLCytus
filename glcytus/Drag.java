@@ -29,9 +29,9 @@ public class Drag extends Note {
 	public double calcAngle(int p, int q) {
 		Node n1 = nodes.get(p);
 		Node n2 = nodes.get(q);
-		double x = n2.x - n1.x;
-		double y = n2.y - n1.y;
-		return Math.atan2(y, x) - Math.PI / 2.0;
+		double x=n2.x-n1.x;
+		double y=n2.y-n1.y;
+		return Math.atan2(y,x) - Math.PI/2.0;
 	}
 
 	public void paint() {
@@ -48,7 +48,7 @@ public class Drag extends Note {
 					Sprite dragline = new Sprite("drag_line");
 					dragline.moveTo(x, y);
 					dragline.setHeight(len);
-					dragline.rotate(angle, 0, 0);
+					dragline.rotate(angle,0,0);
 					dragline.paint(p.renderer, p.time);
 				}
 
@@ -84,17 +84,17 @@ public class Drag extends Note {
 					.get(i - 1).y);
 			double angle = calcAngle(i - 1, i);
 			shadow.moveTo(cx, cy);
-			shadow.rotate(angle, 0, 0);
+			shadow.rotate(angle,0,0);
 			shadow.paint(p.renderer, p.time);
 			head.moveTo(cx, cy);
 			head.paint(p.renderer, p.time);
 			nearadd.moveTo(cx, cy);
 			nearadd.paint(p.renderer, p.time);
 			arrow.moveTo(cx, cy);
-			arrow.rotate(angle, 0, 0);
+			arrow.rotate(angle,0,0);
 			arrow.paint(p.renderer, p.time);
 			dlight.moveTo(cx, cy);
-			dlight.rotate(angle, 0, 0);
+			dlight.rotate(angle,0,0);
 			dlight.paint(p.renderer, p.time);
 		} else {
 			int end = n;
@@ -113,7 +113,7 @@ public class Drag extends Note {
 				Sprite dragline = new Sprite("drag_line");
 				dragline.moveTo(x, y);
 				dragline.setHeight(len);
-				dragline.rotate(angle, 0, 0);
+				dragline.rotate(angle,0,0);
 				dragline.paint(p.renderer, p.time);
 			}
 
@@ -125,7 +125,7 @@ public class Drag extends Note {
 
 			if (p.page == page) {
 				arrow.moveTo(nodes.get(0).x, nodes.get(0).y);
-				arrow.rotate(calcAngle(0, 1), 0, 0);
+				arrow.rotate(calcAngle(0, 1),0,0);
 				arrow.paint(p.renderer, p.time);
 			}
 		}
@@ -162,7 +162,7 @@ public class Drag extends Note {
 		}
 
 		arrexp.moveTo(nodes.get(n - 1).x, nodes.get(n - 1).y);
-		arrexp.rotate(calcAngle(n - 2, n - 1), 0, 0);
+		arrexp.rotate(calcAngle(n - 2, n - 1),0,0);
 		blow = new Animation("drag_head_blow", etime, etime + 1 / 6.0);
 		blow.moveTo(nodes.get(n - 1).x, nodes.get(n - 1).y);
 		blow.clearTransforms();

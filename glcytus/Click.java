@@ -152,11 +152,11 @@ public class Click extends Note {
 					Transform.LINEAR, time, time + 1 / 6.0, 1.2, 1.2, false,
 					false));
 			shadow.addTransform(new Transform(Transform.ALPHA,
-					Transform.LINEAR, time, time + 1 / 6.0, 0.8, 0, false, true));
+					Transform.LINEAR, time, time + 1 / 6.0, 0.8, 0, false,
+					true));
 		}
 		judgeanim.moveTo(x, y);
 		judgeanim.play(p, time);
-		if (blowPlay)
-			blow.play(p);
+		if(blowPlay) blow.play(p);
 	}
 }

@@ -1,9 +1,7 @@
 package glcytus.graphics;
 
-import glcytus.util.ResourceLoader;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
+import glcytus.util.*;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 

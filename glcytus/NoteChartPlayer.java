@@ -1,34 +1,31 @@
 package glcytus;
 
-import glcytus.ext.ComboEffect;
-import glcytus.ext.SelectCover;
-import glcytus.graphics.AdvancedGLRenderer;
-import glcytus.graphics.Animation;
-import glcytus.graphics.ComboSmallPopTransform;
-import glcytus.graphics.GamePlayAnimationPreset;
-import glcytus.graphics.GamePlayFontLibrary;
-import glcytus.graphics.GamePlaySpriteLibrary;
-import glcytus.graphics.MaskBeatTransform;
-import glcytus.graphics.RenderTask;
-import glcytus.graphics.Sprite;
-import glcytus.graphics.TextSprite;
+import static javax.media.opengl.GL.GL_BLEND;
+import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
+import static javax.media.opengl.GL.GL_DEPTH_TEST;
+import static javax.media.opengl.GL.GL_TEXTURE_2D;
+import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
+import glcytus.ext.*;
+import glcytus.graphics.*;
+import glcytus.util.*;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.*;
 
 import javax.media.Manager;
 import javax.media.MediaLocator;
 import javax.media.Player;
+import javax.media.*;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
 import javazoom.jl.converter.Converter;
+
+import com.jogamp.opengl.util.texture.Texture;
 
 public class NoteChartPlayer implements GLEventListener {
 	LinkedList<Animation> animq = new LinkedList<Animation>();
@@ -55,6 +52,8 @@ public class NoteChartPlayer implements GLEventListener {
 	int combo = 0, maxcombo = 0;
 	double score = 0, tp = 0;
 	int result[] = new int[4];
+	
+	public JSPlayer sound = null;
 
 	public NoteChartPlayer(String songtitle, String diff) throws Exception {
 		try {
@@ -72,6 +71,9 @@ public class NoteChartPlayer implements GLEventListener {
 			new Converter().convert(music, "temp.wav");
 			mplayer = Manager.createRealizedPlayer(new MediaLocator(new File(
 					"temp.wav").toURI().toURL()));
+					
+			sound = new JSPlayer("assets/sounds/beat1.wav");
+			for(int i=0;i<10;i++) sound.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -79,7 +81,7 @@ public class NoteChartPlayer implements GLEventListener {
 	}
 
 	public void init(GLAutoDrawable drawable) {
-		GL2 gl = drawable.getGL().getGL2();
+		GL2 gl = drawable.getGL().getGL2(); 
 		gl.glViewport(0, 0, 1024, 683);
 		renderer = new AdvancedGLRenderer(gl);
 		try {
@@ -194,8 +196,7 @@ public class NoteChartPlayer implements GLEventListener {
 	}
 
 	public void start() {
-		while (!renderer.isInitialized())
-			;
+	    while(!renderer.isInitialized());
 		mplayer.start();
 	}
 
@@ -248,6 +249,10 @@ public class NoteChartPlayer implements GLEventListener {
 			break;
 		}
 		poptrans.pop(time);
+		if(combo>0)
+			try{
+				sound.start();
+			}catch(Exception e){}
 		if ((combo > 0) && (combo % 25 == 0))
 			comboeffect.show(time, combo);
 		if (combo > maxcombo)
@@ -315,7 +320,7 @@ public class NoteChartPlayer implements GLEventListener {
 
 		scanline.moveTo(0, liney);
 		scanline.paint(renderer, time);
-
+		
 		renderer.flushTaskQueue();
 	}
 

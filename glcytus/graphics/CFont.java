@@ -3,6 +3,8 @@ package glcytus.graphics;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jogamp.opengl.util.texture.Texture;
+
 public final class CFont implements Cloneable {
 	public String name = "";
 	public Texture2D texture = null;
@@ -12,15 +14,15 @@ public final class CFont implements Cloneable {
 	public double sx = 1, sy = 1;
 
 	public final class CharFrame implements Cloneable {
-		public int id = 0;
+	    public int id = 0;
 		public int w = 0, h = 0;
 		public double tx = 0, ty = 0, tw = 0, th = 0; // Texture coords
 		public int xoff = 0, yoff = 0;
 		public int xadv = 0;
 		public ImageHandle img = null;
-
-		public void updateImageHandle() {
-			img = new ImageHandle();
+		
+		public void updateImageHandle(){
+		    img = new ImageHandle();
 			img.name = CFont.this.name + id;
 			img.texture = CFont.this.texture;
 			img.x = tx;

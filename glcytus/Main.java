@@ -8,7 +8,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 public class Main extends JFrame {
 	public Main(String songtitle) throws Exception {
 		super("GLCytus");
-		setSize(966, 648);
+		setSize(742, 504);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		GLCanvas canvas = new GLCanvas();
@@ -21,7 +21,7 @@ public class Main extends JFrame {
 		try {
 			Thread.sleep(3000);
 		} catch (Exception e) {
-			e.printStackTrace();
+		    e.printStackTrace();
 		}
 		p.start();
 	}

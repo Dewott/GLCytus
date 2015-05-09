@@ -82,7 +82,7 @@ public class Hold extends Note {
 			if ((judgetime1 != -1) && (!playsound)) {
 				playsound = true;
 				try {
-					// p.sound.start();
+					p.sound.start();
 				} catch (Exception e) {
 				}
 			}

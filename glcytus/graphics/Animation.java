@@ -1,5 +1,4 @@
 package glcytus.graphics;
-
 import glcytus.NoteChartPlayer;
 
 public class Animation extends Sprite {
@@ -14,7 +13,7 @@ public class Animation extends Sprite {
 
 	public Animation() {
 	}
-
+	
 	public Animation(String str, double stime, double etime) {
 		this(1, etime - stime, true, new String[] { str });
 		this.stime = stime;
@@ -27,14 +26,14 @@ public class Animation extends Sprite {
 		this.once = once;
 		this.imgs = imgs;
 	}
-
+	
 	public Animation(int n, double duration, boolean once, String frames[]) {
 		this(n, duration, once, (ImageHandle[]) null);
 		imgs = new ImageHandle[n];
 		for (int i = 0; i < n; i++)
 			imgs[i] = GamePlaySpriteLibrary.get(frames[i]);
 	}
-
+	
 	public void play(NoteChartPlayer p) {
 		play(p, stime);
 	}
@@ -44,36 +43,32 @@ public class Animation extends Sprite {
 		etime = stime + interval * n;
 		p.addAnimation(this);
 	}
-
-	public void playToAndStop(int frame) {
-		this.stopAt = frame;
+	
+	public void playToAndStop(int frame){
+	    this.stopAt = frame;
 		this.status = STATUS_PLAY;
 	}
 
-	public int getCurrentFrame(double time) {
-		int frame = 0;
-		if (time > stime) {
-			if ((etime != -1) && (time > etime) && once)
-				frame = n - 1;
-			else
-				frame = (int) ((time - stime) / interval) % n;
+	public int getCurrentFrame(double time){
+	    int frame = 0;
+	    if(time>stime){
+		    if((etime!=-1)&&(time>etime)&&once) frame = n - 1;
+			else frame = (int)((time - stime)/interval)%n;
 		}
-		if (reversed)
-			frame = (n - 1) - frame;
+		if(reversed) frame = (n - 1) - frame;
 		return frame;
 	}
-
+	
 	public void paint(Renderer r, double time) {
 		if (time < stime)
 			return;
-		if (once && (etime != -1) && (time >= etime))
+		if (once && (etime!=-1) && (time >= etime))
 			return;
-
-		if (status == STATUS_PLAY) {
-			int current = getCurrentFrame(time);
-			if (current == stopAt)
-				status = STATUS_STOP;
-			updateImage(imgs[current]);
+			
+		if(status == STATUS_PLAY){
+		    int current = getCurrentFrame(time);
+			if(current == stopAt) status = STATUS_STOP;
+		    updateImage(imgs[current]);
 		}
 		super.paint(r, time);
 	}

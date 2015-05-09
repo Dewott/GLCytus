@@ -1,8 +1,7 @@
 package glcytus.ext;
 
-import glcytus.graphics.MorphingAnimation;
-import glcytus.graphics.TextSprite;
-import glcytus.util.ResourceLoader;
+import glcytus.util.*;
+import glcytus.graphics.*;
 
 public class ComboEffect extends Base {
 	Base back = null;
@@ -13,14 +12,14 @@ public class ComboEffect extends Base {
 		String folder = "assets/ui/GamePlay/";
 		loadSprite(folder, "combo_effect.prefab.json");
 		text1 = (TextSprite) elements.get("text");
-		text1.setAnchor("Center");
-		text1.moveTo(0, 150);
+		text1.setAnchor("Left");
+		text1.moveTo(-200, 150);
 
 		back = new Base();
 		back.loadSprite(folder, "combo_effect.prefab.json");
 		text2 = (TextSprite) back.elements.get("text");
-		text2.setAnchor("Center");
-		text2.moveTo(0, 150);
+		text2.setAnchor("Left");
+		text2.moveTo(-200, 150);
 		backanim = ResourceLoader.loadMorphingAnimation(folder,
 				"combo_effect_back.anim.json", false);
 		addChild(back, true);

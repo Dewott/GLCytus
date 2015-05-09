@@ -1,11 +1,12 @@
 package glcytus.graphics;
 
-import glcytus.util.ResourceLoader;
+import glcytus.util.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jogamp.opengl.util.texture.Texture;
 
 public class Atlas {
 	public Texture2D texture = null;
@@ -37,10 +38,10 @@ public class Atlas {
 			img.spsy = sprsrcsize.getIntValue("y");
 			img.spsw = sprsrcsize.getIntValue("w");
 			img.spsh = sprsrcsize.getIntValue("h");
-
-			if (part.containsKey("rotated"))
-				img.rotated = part.getBoolean("rotated");
-
+			
+			if(part.containsKey("rotated"))
+			    img.rotated = part.getBoolean("rotated");
+			
 			map.put(img.name, img);
 		}
 	}

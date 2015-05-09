@@ -1,11 +1,11 @@
 package glcytus.graphics;
 
-import glcytus.util.ResourceLoader;
 import glcytus.util.SpriteState;
+import glcytus.util.*;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
+import java.util.LinkedList;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -33,8 +33,7 @@ public class MorphingAnimation {
 			if (obj.containsKey("Y"))
 				s.y = obj.getDoubleValue("Y");
 			if (obj.containsKey("Rotation"))
-				s.rotationAngle[0] = Math.toRadians(obj
-						.getDoubleValue("Rotation"));
+				s.rotationAngle[0] = Math.toRadians(obj.getDoubleValue("Rotation"));
 			if (obj.containsKey("ScaleX"))
 				s.sx = obj.getDoubleValue("ScaleX");
 			if (obj.containsKey("ScaleY"))

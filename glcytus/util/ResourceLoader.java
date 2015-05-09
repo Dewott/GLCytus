@@ -1,30 +1,13 @@
 package glcytus.util;
 
-import glcytus.graphics.Animation;
-import glcytus.graphics.Atlas;
-import glcytus.graphics.CFont;
-import glcytus.graphics.ImageHandle;
-import glcytus.graphics.MorphingAnimation;
-import glcytus.graphics.Renderer;
-import glcytus.graphics.Sprite;
-import glcytus.graphics.TextSprite;
-import glcytus.graphics.Texture2D;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import glcytus.graphics.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.regex.*;
 import javax.media.opengl.GLProfile;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.jogamp.opengl.util.texture.TextureData;
-import com.jogamp.opengl.util.texture.TextureIO;
+import com.jogamp.opengl.util.texture.*;
+import com.alibaba.fastjson.*;
 
 public class ResourceLoader {
 	static HashMap<String, CFont> fonts = new HashMap<String, CFont>();
@@ -83,7 +66,7 @@ public class ResourceLoader {
 			m.find();
 			// xadv
 			frame.xadv = Integer.parseInt(m.group());
-
+			
 			frame.updateImageHandle();
 			font.map.put(frame.id, frame);
 			str = r.readLine();
@@ -232,8 +215,7 @@ public class ResourceLoader {
 		File f = getFile(folder, name);
 		if (textures.containsKey(f.getName()))
 			return textures.get(f.getName());
-		TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), f,
-				false, f.getName().split("\\.")[1]);
+		TextureData data = TextureIO.newTextureData(GLProfile.getDefault(),f,false,f.getName().split("\\.")[1]);
 		Texture2D t = new Texture2D(data);
 		textures.put(f.getName(), t);
 		Renderer.currentInstance.addTexture(t);

@@ -1,6 +1,6 @@
 package glcytus.ext;
 
-import java.util.LinkedHashMap;
+import java.util.*;
 
 public class ChapterInfo {
 	public String chapterName = "";
