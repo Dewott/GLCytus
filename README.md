@@ -3,7 +3,7 @@ GLCytus
 
 Cytus simulator with OpenGL
 
-Executable JAR files can be found in ![https://github.com/Dewott/GLCytus/releases]https://github.com/Dewott/GLCytus/releases 
+Executable JAR files can be found in ![https://github.com/Dewott/GLCytus/releases](https://github.com/Dewott/GLCytus/releases) 
 
 Screenshots
 ---
