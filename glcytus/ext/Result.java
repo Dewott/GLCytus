@@ -1,7 +1,8 @@
 package glcytus.ext;
 
-import java.text.*;
-import glcytus.graphics.*;
+import glcytus.graphics.TextSprite;
+
+import java.text.DecimalFormat;
 
 public class Result extends Base {
 	Base diff = null, perfect = null, good = null, bad = null, miss = null;
@@ -21,8 +22,7 @@ public class Result extends Base {
 
 		perfect = new Base();
 		perfect.loadSprite(folder, "perfect.prefab.json");
-		perfect.loadMorphingAnimation(folder, "BeatStatistics.anim.json",
-				false, 0);
+		perfect.loadMorphingAnimation(folder, "BeatStatistics.anim.json", false, 0);
 		addChild(perfect, false);
 
 		good = new Base();
@@ -66,13 +66,11 @@ public class Result extends Base {
 	}
 
 	public void setPerfect(int number) {
-		((TextSprite) perfect.elements.get("Number")).text = String
-				.valueOf(number);
+		((TextSprite) perfect.elements.get("Number")).text = String.valueOf(number);
 	}
 
 	public void setGood(int number) {
-		((TextSprite) good.elements.get("Number")).text = String
-				.valueOf(number);
+		((TextSprite) good.elements.get("Number")).text = String.valueOf(number);
 	}
 
 	public void setBad(int number) {
@@ -80,7 +78,6 @@ public class Result extends Base {
 	}
 
 	public void setMiss(int number) {
-		((TextSprite) miss.elements.get("Number")).text = String
-				.valueOf(number);
+		((TextSprite) miss.elements.get("Number")).text = String.valueOf(number);
 	}
 }

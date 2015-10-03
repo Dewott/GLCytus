@@ -1,0 +1,8 @@
+clickfx=1
+fullScreen=0
+width=1024
+height=683
+convertMP3=1
+enableBG=1
+bgmGain=10
+fxGain=10

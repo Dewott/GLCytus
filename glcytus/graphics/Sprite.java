@@ -1,6 +1,8 @@
 package glcytus.graphics;
-import com.jogamp.opengl.math.*;
+
 import java.util.LinkedList;
+
+import com.jogamp.opengl.math.Matrix4;
 
 public class Sprite {
 	public Sprite father = null;
@@ -29,8 +31,8 @@ public class Sprite {
 		this.name = name;
 		updateImage(GamePlaySpriteLibrary.get(name));
 	}
-	
-	public void updateImage(ImageHandle img){
+
+	public void updateImage(ImageHandle img) {
 		this.img = img;
 		w = img.srcw;
 		h = img.srch;
@@ -40,7 +42,7 @@ public class Sprite {
 		updateStatus(time);
 		for (Sprite s : childs)
 			s.paint(r, time);
-			
+
 		if ((w == 0) || (h == 0))
 			return;
 		r.addRenderTask(new RenderTask(this));
@@ -53,21 +55,21 @@ public class Sprite {
 
 	public Matrix4 getTransformMatrix() {
 		Matrix4 mat = new Matrix4();
-		mat.loadIdentity(); 
-		mat.translate((float)x,(float)y,(float)z);
-		mat.rotate((float)rotationAngle[0],0f,0f,1f);
-		mat.rotate((float)rotationAngle[1],0f,1f,0f);
-		mat.rotate((float)rotationAngle[2],1f,0f,0f);
-		mat.translate((float)(-w * sx * ax), (float)(-h * sy * ay), 0f);
-		mat.scale((float)sx, (float)sy, 1f);
+		mat.loadIdentity();
+		mat.translate((float) x, (float) y, (float) z);
+		mat.rotate((float) rotationAngle[0], 0f, 0f, 1f);
+		mat.rotate((float) rotationAngle[1], 0f, 1f, 0f);
+		mat.rotate((float) rotationAngle[2], 1f, 0f, 0f);
+		mat.translate((float) (-w * sx * ax), (float) (-h * sy * ay), 0f);
+		mat.scale((float) sx, (float) sy, 1f);
 		if (img != null)
-			mat.scale((float)(w / img.srcw), (float)(h / img.srch), 1f);
-		if ((!independent) && (father != null)){
+			mat.scale((float) (w / img.srcw), (float) (h / img.srch), 1f);
+		if ((!independent) && (father != null)) {
 			Matrix4 prev = father.getTransformMatrix();
 			prev.multMatrix(mat);
 			return prev;
-		}
-		else return mat;
+		} else
+			return mat;
 	}
 
 	public double getFinalAlpha() {
@@ -99,7 +101,7 @@ public class Sprite {
 		setHeight(height);
 	}
 
-	public void rotate(double a,double b,double y) {
+	public void rotate(double a, double b, double y) {
 		this.rotationAngle[0] = a;
 		this.rotationAngle[1] = b;
 		this.rotationAngle[2] = y;
@@ -159,7 +161,7 @@ public class Sprite {
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	public void moveTo(double x, double y, double z) {
 		this.x = x;
 		this.y = y;

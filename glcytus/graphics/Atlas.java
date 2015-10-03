@@ -1,12 +1,11 @@
 package glcytus.graphics;
 
-import glcytus.util.*;
+import glcytus.util.ResourceLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jogamp.opengl.util.texture.Texture;
 
 public class Atlas {
 	public Texture2D texture = null;
@@ -14,8 +13,7 @@ public class Atlas {
 
 	public Atlas(String folder, String name) throws Exception {
 		texture = ResourceLoader.loadTexture(folder, name + ".png");
-		JSONObject frames = ResourceLoader.loadJSONObjectFromFile(folder,
-				name + ".json").getJSONObject("frames");
+		JSONObject frames = ResourceLoader.loadJSONObjectFromFile(folder, name + ".json").getJSONObject("frames");
 
 		for (Map.Entry<String, Object> entry : frames.entrySet()) {
 			ImageHandle img = new ImageHandle();
@@ -38,10 +36,10 @@ public class Atlas {
 			img.spsy = sprsrcsize.getIntValue("y");
 			img.spsw = sprsrcsize.getIntValue("w");
 			img.spsh = sprsrcsize.getIntValue("h");
-			
-			if(part.containsKey("rotated"))
-			    img.rotated = part.getBoolean("rotated");
-			
+
+			if (part.containsKey("rotated"))
+				img.rotated = part.getBoolean("rotated");
+
 			map.put(img.name, img);
 		}
 	}

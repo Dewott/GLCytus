@@ -1,7 +1,9 @@
 package glcytus.ext;
 
-import glcytus.graphics.*;
-import glcytus.util.*;
+import glcytus.graphics.MorphingAnimation;
+import glcytus.graphics.Sprite;
+import glcytus.util.ResourceLoader;
+
 import java.util.LinkedHashMap;
 
 public class Base extends Sprite {
@@ -11,15 +13,12 @@ public class Base extends Sprite {
 	}
 
 	public void loadSprite(String folder, String name) throws Exception {
-		ResourceLoader.loadSprite(folder, this,
-				ResourceLoader.loadJSONObjectFromFile(folder, name));
+		ResourceLoader.loadSprite(folder, this, ResourceLoader.loadJSONObjectFromFile(folder, name));
 		addElements(this);
 	}
 
-	public double loadMorphingAnimation(String folder, String filename,
-			boolean loop, double offset) throws Exception {
-		MorphingAnimation anim = ResourceLoader.loadMorphingAnimation(folder,
-				filename, loop);
+	public double loadMorphingAnimation(String folder, String filename, boolean loop, double offset) throws Exception {
+		MorphingAnimation anim = ResourceLoader.loadMorphingAnimation(folder, filename, loop);
 		anim.use(elements, offset);
 		return anim.endtime + offset;
 	}

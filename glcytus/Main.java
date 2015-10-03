@@ -1,34 +1,54 @@
 package glcytus;
 
+import java.io.*;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.jogamp.opengl.util.FPSAnimator;
 
 public class Main extends JFrame {
-	public Main(String songtitle) throws Exception {
+	public Main() throws Exception {
 		super("GLCytus");
-		setSize(742, 504);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		Preferences.load();
+		String songtitle = JOptionPane.showInputDialog("Input song title");
+		String diff = JOptionPane.showInputDialog("Input difficulty", "hard");
+		if (Preferences.fullScreen == 0) {
+			setSize(Preferences.width, Preferences.height);
+			setDefaultCloseOperation(EXIT_ON_CLOSE);
+		} else {
+			setUndecorated(true);
+			GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			GraphicsDevice dev = env.getDefaultScreenDevice();
+			dev.setFullScreenWindow(this);
+		}
 
 		GLCanvas canvas = new GLCanvas();
-		NoteChartPlayer p = new NoteChartPlayer(songtitle, "hard");
+		NoteChartPlayer p = new NoteChartPlayer(songtitle, diff);
 		canvas.addGLEventListener(p);
 		add(canvas);
 
 		setVisible(true);
-		new FPSAnimator(canvas, 60, true).start();
-		try {
-			Thread.sleep(3000);
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
+		new FPSAnimator(canvas, 120, false).start();
+		Thread.sleep(1000);
 		p.start();
 	}
 
 	public static void main(String args[]) throws Exception {
 		System.setProperty("sun.java2d.opengl", "false");
 		System.setProperty("sun.java2d.noddraw", "true");
-		new Main(args[0]);
+		try {
+			PrintStream stdout = new PrintStream(new FileOutputStream("stdout.txt"));
+			PrintStream stderr = new PrintStream(new FileOutputStream("stderr.txt"));
+			System.setOut(stdout);
+			System.setErr(stderr);
+			new Main();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 }

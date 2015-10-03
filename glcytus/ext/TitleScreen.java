@@ -5,8 +5,7 @@ public class TitleScreen extends Base {
 		String folder = "assets/ui/Title/New/";
 		loadSprite(folder, "titleScreen.prefab.json");
 
-		double endtime = loadMorphingAnimation(folder, "enter.anim.json",
-				false, 0);
+		double endtime = loadMorphingAnimation(folder, "enter.anim.json", false, 0);
 		loadMorphingAnimation(folder, "loop.anim.json", true, endtime);
 	}
 }

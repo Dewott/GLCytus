@@ -1,11 +1,11 @@
 package glcytus.graphics;
 
+import glcytus.util.ResourceLoader;
 import glcytus.util.SpriteState;
-import glcytus.util.*;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -14,10 +14,8 @@ public class MorphingAnimation {
 	public double endtime = 0;
 	public HashMap<String, LinkedList<Transform>> data = new HashMap<String, LinkedList<Transform>>();
 
-	public MorphingAnimation(String folder, String filename, boolean loop)
-			throws Exception {
-		JSONObject anim = ResourceLoader.loadJSONObjectFromFile(folder,
-				filename);
+	public MorphingAnimation(String folder, String filename, boolean loop) throws Exception {
+		JSONObject anim = ResourceLoader.loadJSONObjectFromFile(folder, filename);
 		boolean alignmentEnd = false;
 		if (anim.containsKey("Alignment"))
 			alignmentEnd = anim.getString("Alignment").equals("End");
@@ -106,8 +104,8 @@ public class MorphingAnimation {
 					double delta = child.getDoubleValue("Delta");
 					if (type == Transform.ROTATION)
 						delta = Math.toRadians(delta);
-					Transform t = new Transform(type, Transform.LINEAR, time,
-							time + dur, sval, sval + delta, false, false);
+					Transform t = new Transform(type, Transform.LINEAR, time, time + dur, sval, sval + delta, false,
+							false);
 					if (loop)
 						lt.addTransform(t);
 					else

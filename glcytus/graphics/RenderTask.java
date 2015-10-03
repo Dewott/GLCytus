@@ -1,12 +1,6 @@
 package glcytus.graphics;
-import glcytus.util.packrect.*;
-import static javax.media.opengl.GL.GL_ONE;
-import static javax.media.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
-import static javax.media.opengl.GL.GL_SRC_ALPHA;
-import static javax.media.opengl.GL2GL3.GL_QUADS;
-import com.jogamp.opengl.math.*;
 
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.math.Matrix4;
 
 public class RenderTask {
 	public ImageHandle img = null;
@@ -46,12 +40,12 @@ public class RenderTask {
 			srcPts[7] = s.h;
 		}
 		Matrix4 mat = s.getTransformMatrix();
-		for(int i=0;i<4;i++){
-		    float src[] = new float[]{(float)srcPts[i*2],(float)srcPts[i*2+1],0f,1f};
+		for (int i = 0; i < 4; i++) {
+			float src[] = new float[] { (float) srcPts[i * 2], (float) srcPts[i * 2 + 1], 0f, 1f };
 			float dst[] = new float[4];
-		    mat.multVec(src,dst);
-		    dstPts[i*2] = dst[0];
-			dstPts[i*2+1] = dst[1];
+			mat.multVec(src, dst);
+			dstPts[i * 2] = dst[0];
+			dstPts[i * 2 + 1] = dst[1];
 		}
 		System.arraycopy(s.color, 0, color, 0, 3);
 		color[3] = s.getFinalAlpha();

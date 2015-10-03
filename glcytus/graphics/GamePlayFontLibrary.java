@@ -1,21 +1,19 @@
 package glcytus.graphics;
 
-import glcytus.util.*;
+import glcytus.util.ResourceLoader;
 
 import java.util.HashMap;
 
 public class GamePlayFontLibrary {
 	static String flist[] = new String[] { "combo", "ComboSmall", "BoltonBold" };
 	static HashMap<String, CFont> fonts = new HashMap<String, CFont>();
-	public static double scorecolor[] = new double[] { 10.0 / 51.0,
-			10.0 / 51.0, 10.0 / 51.0, 1.0 };
+	public static double scorecolor[] = new double[] { 10.0 / 51.0, 10.0 / 51.0, 10.0 / 51.0, 1.0 };
 
 	// (50,50,50) 0xFF323232
 
 	public static void init() throws Exception {
 		for (int i = 0; i < 3; i++) {
-			CFont font = ResourceLoader.loadFont("assets/fonts/", flist[i]
-					+ ".fnt");
+			CFont font = ResourceLoader.loadFont("assets/fonts/", flist[i] + ".fnt");
 			font.name = flist[i];
 			fonts.put(flist[i], font);
 		}

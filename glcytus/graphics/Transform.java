@@ -1,9 +1,8 @@
 package glcytus.graphics;
 
 public class Transform implements Cloneable {
-	public static final int NONE = 0, TRANS_X = 1, TRANS_Y = 2, ALPHA = 3,
-			ROTATION = 4, SX = 5, SY = 6, SCALE = 7, COLOR_RED = 8,
-			COLOR_GREEN = 9, COLOR_BLUE = 10;
+	public static final int NONE = 0, TRANS_X = 1, TRANS_Y = 2, ALPHA = 3, ROTATION = 4, SX = 5, SY = 6, SCALE = 7,
+			COLOR_RED = 8, COLOR_GREEN = 9, COLOR_BLUE = 10;
 	public int type = 0;
 
 	public static final int LINEAR = 0, BEZIER = 1, CUBIC = 2;
@@ -15,15 +14,14 @@ public class Transform implements Cloneable {
 	public Transform() {
 	}
 
-	public Transform(int type, int easing, double stime, double etime,
-			double sval, double eval, boolean lborder, boolean rborder) {
+	public Transform(int type, int easing, double stime, double etime, double sval, double eval, boolean lborder,
+			boolean rborder) {
 		this(type, easing, stime, etime, sval, eval);
 		this.lborder = lborder;
 		this.rborder = rborder;
 	}
 
-	public Transform(int type, int easing, double stime, double etime,
-			double sval, double eval) {
+	public Transform(int type, int easing, double stime, double etime, double sval, double eval) {
 		this.type = type;
 		this.easing = easing;
 		this.stime = stime;

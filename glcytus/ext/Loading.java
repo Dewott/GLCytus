@@ -1,7 +1,7 @@
 package glcytus.ext;
 
-import glcytus.graphics.*;
-import glcytus.util.*;
+import glcytus.graphics.MorphingAnimation;
+import glcytus.util.ResourceLoader;
 
 public class Loading extends Base {
 	MorphingAnimation enteranim = null, loopanim = null, leaveanim = null;
@@ -10,12 +10,9 @@ public class Loading extends Base {
 		String folder = "assets/ui/Loading/";
 		loadSprite(folder, "loading_gate.prefab.json");
 
-		enteranim = ResourceLoader.loadMorphingAnimation(folder,
-				"loading_enter.anim.json", false);
-		loopanim = ResourceLoader.loadMorphingAnimation(folder,
-				"waiting_loop.anim.json", true);
-		leaveanim = ResourceLoader.loadMorphingAnimation(folder,
-				"loading_leave.anim.json", false);
+		enteranim = ResourceLoader.loadMorphingAnimation(folder, "loading_enter.anim.json", false);
+		loopanim = ResourceLoader.loadMorphingAnimation(folder, "waiting_loop.anim.json", true);
+		leaveanim = ResourceLoader.loadMorphingAnimation(folder, "loading_leave.anim.json", false);
 	}
 
 	public void enter(double time) {
