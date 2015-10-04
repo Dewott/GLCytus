@@ -21,7 +21,8 @@ public class Main extends JFrame {
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
 		} else {
 			setUndecorated(true);
-			GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			GraphicsEnvironment env = GraphicsEnvironment
+					.getLocalGraphicsEnvironment();
 			GraphicsDevice dev = env.getDefaultScreenDevice();
 			dev.setFullScreenWindow(this);
 		}
@@ -41,8 +42,10 @@ public class Main extends JFrame {
 		System.setProperty("sun.java2d.opengl", "false");
 		System.setProperty("sun.java2d.noddraw", "true");
 		try {
-			PrintStream stdout = new PrintStream(new FileOutputStream("stdout.txt"));
-			PrintStream stderr = new PrintStream(new FileOutputStream("stderr.txt"));
+			PrintStream stdout = new PrintStream(new FileOutputStream(
+					"stdout.txt"));
+			PrintStream stderr = new PrintStream(new FileOutputStream(
+					"stderr.txt"));
 			System.setOut(stdout);
 			System.setErr(stderr);
 			new Main();

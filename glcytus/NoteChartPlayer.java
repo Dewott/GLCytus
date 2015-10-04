@@ -57,11 +57,11 @@ public class NoteChartPlayer implements GLEventListener {
 	int combo = 0, maxcombo = 0;
 	double score = 0, tp = 0;
 	int result[] = new int[4];
-
+	
 	static LinkedList<Integer> snd_srcs = new LinkedList<Integer>();
 	int mplayer = -1, bgm = -1, sound = -1;
 	boolean stopped = true;
-
+	
 	double lastMediaTime = 0;
 	long lastUpdateTime = 0;
 
@@ -76,38 +76,38 @@ public class NoteChartPlayer implements GLEventListener {
 			else
 				pdata = NoteChartReader1.read(in);
 			in.close();
-
+			
 			ALut.alutInit();
-			al = ALFactory.getAL();
+		    al = ALFactory.getAL();
 
 			String music = folder + songtitle + ".mp3";
 			if (Preferences.convertMP3 == 1)
 				new Converter().convert(music, "temp.wav");
 			bgm = loadSoundFile(new File("temp.wav"));
-			if (Preferences.clickfx == 1)
-				sound = loadSoundFile(new File("assets/sounds/beat1.wav"));
+			if(Preferences.clickfx == 1)
+			    sound = loadSoundFile(new File("assets/sounds/beat1.wav"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
 	}
-
-	private int loadSoundFile(File f) {
+	
+	private int loadSoundFile(File f){
 		int a[] = new int[1];
 		al.alGenBuffers(1, a, 0);
 		WAVData wavdata = null;
-		try {
-			wavdata = WAVLoader.loadFromFile(f.getPath());
-		} catch (Exception e) {
+		try{
+		    wavdata = WAVLoader.loadFromFile(f.getPath());
+		}catch(Exception e){
 			e.printStackTrace();
 		}
-		al.alBufferData(a[0], wavdata.format, wavdata.data, wavdata.size, wavdata.freq);
+		al.alBufferData(a[0], wavdata.format, wavdata.data, wavdata.size,
+				wavdata.freq);
 		return a[0];
 	}
-
-	public int playSound(int handle, float gain) {
-		if (handle == -1)
-			return -1;
+	
+	public int playSound(int handle,float gain){
+		if(handle == -1) return -1;
 		int a[] = new int[1];
 		al.alGenSources(1, a, 0);
 		int src = a[0];
@@ -121,11 +121,11 @@ public class NoteChartPlayer implements GLEventListener {
 		snd_srcs.add(src);
 		return src;
 	}
-
-	private double getMediaTime(int handle) {
+	
+	private double getMediaTime(int handle){
 		float time[] = new float[1];
 		al.alGetSourcef(handle, AL_SEC_OFFSET, time, 0);
-		return (double) time[0];
+		return (double)time[0];
 	}
 
 	public void init(GLAutoDrawable drawable) {
@@ -152,7 +152,7 @@ public class NoteChartPlayer implements GLEventListener {
 		renderer.finish();
 
 		bgmask1 = new Sprite("gameplay_bg_mask");
-		// bgmask1.setSize(1024, 683);
+		//bgmask1.setSize(1024, 683);
 		bgmask1.setSize(1280, 853);
 		bgmask1.color[3] = 0.75;
 
@@ -217,12 +217,14 @@ public class NoteChartPlayer implements GLEventListener {
 		for (NoteChart.Note pnote : pdata.notes)
 			if (pnote.linkref == -1) {
 				if (pnote.holdtime == 0) {
-					this.notes.add(new Click(this, pnote.id, pnote.time, calcX(pnote.x), calcY(pnote.time)));
+					this.notes.add(new Click(this, pnote.id, pnote.time,
+							calcX(pnote.x), calcY(pnote.time)));
 				} else
-					this.notes.add(
-							new Hold(this, pnote.id, pnote.time, pnote.holdtime, calcX(pnote.x), calcY(pnote.time)));
+					this.notes.add(new Hold(this, pnote.id, pnote.time,
+							pnote.holdtime, calcX(pnote.x), calcY(pnote.time)));
 			} else
-				this.notes.add(new Drag.Node(this, pnote.id, pnote.time, calcX(pnote.x), calcY(pnote.time)));
+				this.notes.add(new Drag.Node(this, pnote.id, pnote.time,
+						calcX(pnote.x), calcY(pnote.time)));
 		for (NoteChart.Link plink : pdata.links) {
 			Drag link = new Drag(this);
 			for (int i = 0; i < plink.n; i++) {
@@ -245,8 +247,8 @@ public class NoteChartPlayer implements GLEventListener {
 	public void start() {
 		while (!renderer.isInitialized())
 			;
-		stopped = false;
-		mplayer = playSound(bgm, (float) (Preferences.bgmGain / 10.0));
+	    stopped = false;
+		mplayer = playSound(bgm,(float)(Preferences.bgmGain/10.0));
 	}
 
 	public double calcX(double x) {
@@ -299,12 +301,13 @@ public class NoteChartPlayer implements GLEventListener {
 		}
 		poptrans.pop(time);
 		if (combo > 0)
-			playSound(sound, (float) (Preferences.fxGain / 10.0));
+			playSound(sound,(float)(Preferences.fxGain/10.0));
 		if ((combo > 0) && (combo % 25 == 0))
 			comboeffect.show(time, combo);
 		if (combo > maxcombo)
 			maxcombo = combo;
-		score += 900000.0 / ncount * sratio + combo * 200000.0 / ncount / (ncount + 1);
+		score += 900000.0 / ncount * sratio + combo * 200000.0 / ncount
+				/ (ncount + 1);
 		tp += 100.0 / ncount * tpratio;
 	}
 
@@ -319,15 +322,14 @@ public class NoteChartPlayer implements GLEventListener {
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
-
-		if (!stopped) {
-			// interpolation
-			double newTime = getMediaTime(mplayer);
-			if (lastUpdateTime == 0)
-				lastUpdateTime = System.nanoTime();
-			if (lastMediaTime == newTime)
-				time = lastMediaTime + (System.nanoTime() - lastUpdateTime) / 1e9;
-			else {
+		
+		if(!stopped){
+			//interpolation
+		    double newTime = getMediaTime(mplayer);
+			if(lastUpdateTime == 0) lastUpdateTime = System.nanoTime();
+			if(lastMediaTime==newTime)
+				time = lastMediaTime + (System.nanoTime()-lastUpdateTime)/1e9;
+			else{
 				lastMediaTime = newTime;
 				lastUpdateTime = System.nanoTime();
 				time = newTime;
@@ -359,7 +361,7 @@ public class NoteChartPlayer implements GLEventListener {
 			}
 		}
 		animq.removeAll(del);
-
+		
 		comboeffect.paint(renderer, time);
 		renderer.flushTaskQueue();
 
@@ -376,7 +378,7 @@ public class NoteChartPlayer implements GLEventListener {
 				n.paint();
 			}
 		}
-
+		
 		if (combo > 1) {
 			combosmallbg.paint(renderer, time);
 			combosmalltext.paint(renderer, time);
@@ -390,15 +392,14 @@ public class NoteChartPlayer implements GLEventListener {
 		scanline.moveTo(0, liney);
 		scanline.paint(renderer, time);
 		renderer.flushTaskQueue();
-
-		if (stopped)
-			return;
+		
+		if(stopped) return;
 		int a[] = new int[1];
 		LinkedList<Integer> delList = new LinkedList<Integer>();
 		for (Integer i : snd_srcs) {
 			al.alGetSourcei(i, AL_SOURCE_STATE, a, 0);
 			if (a[0] == AL_STOPPED) {
-				if (i == mplayer) {
+				if(i == mplayer){
 					stopped = true;
 					continue;
 				}
@@ -409,7 +410,8 @@ public class NoteChartPlayer implements GLEventListener {
 		snd_srcs.removeAll(delList);
 	}
 
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
+			int height) {
 	}
 
 	public void dispose(GLAutoDrawable drawable) {

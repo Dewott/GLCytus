@@ -36,8 +36,10 @@ public class ImageHandle {
 			spsh = t;
 		}
 		Rectangle2D.Double rect1 = new Rectangle2D.Double(0, 0, srcw, srch);
-		Rectangle2D.Double rect2 = new Rectangle2D.Double(spsx, spsy, spsw, spsh);
-		Rectangle2D.Double rect3 = (Rectangle2D.Double) rect1.createIntersection(rect2);
+		Rectangle2D.Double rect2 = new Rectangle2D.Double(spsx, spsy, spsw,
+				spsh);
+		Rectangle2D.Double rect3 = (Rectangle2D.Double) rect1
+				.createIntersection(rect2);
 
 		texPts = new double[8];
 		pts = new double[8];

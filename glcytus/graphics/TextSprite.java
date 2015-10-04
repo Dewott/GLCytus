@@ -1,5 +1,6 @@
 package glcytus.graphics;
 
+
 public class TextSprite extends Sprite {
 	public CFont font = null;
 	public String text = "";
@@ -35,7 +36,8 @@ public class TextSprite extends Sprite {
 			addChild(charSprite, false);
 			xpos += frame.xadv;
 			if (i < text.length() - 1) {
-				CFont.IntPair pair = new CFont.IntPair(text.charAt(i), text.charAt(i + 1));
+				CFont.IntPair pair = new CFont.IntPair(text.charAt(i),
+						text.charAt(i + 1));
 				if (font.kernings.containsKey(pair))
 					xpos += font.kernings.get(pair);
 			}

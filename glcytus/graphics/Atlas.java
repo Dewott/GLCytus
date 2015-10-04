@@ -13,7 +13,8 @@ public class Atlas {
 
 	public Atlas(String folder, String name) throws Exception {
 		texture = ResourceLoader.loadTexture(folder, name + ".png");
-		JSONObject frames = ResourceLoader.loadJSONObjectFromFile(folder, name + ".json").getJSONObject("frames");
+		JSONObject frames = ResourceLoader.loadJSONObjectFromFile(folder,
+				name + ".json").getJSONObject("frames");
 
 		for (Map.Entry<String, Object> entry : frames.entrySet()) {
 			ImageHandle img = new ImageHandle();

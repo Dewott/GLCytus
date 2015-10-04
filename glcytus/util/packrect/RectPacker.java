@@ -44,8 +44,10 @@ public class RectPacker {
 					for (int j = index; j < rects.size(); j++) {
 						if (rects.get(j).w == line.w) {
 							if (line.y + rects.get(j).h <= maxHeight) {
-								int score = (leftFit(line, rects.get(j).h) ? 1 : 0)
-										+ (rightFit(line, rects.get(j).h) ? 1 : 0);
+								int score = (leftFit(line, rects.get(j).h) ? 1
+										: 0)
+										+ (rightFit(line, rects.get(j).h) ? 1
+												: 0);
 								if (score > bestScore) {
 									bestScore = score;
 									bestFit = rects.get(j);
@@ -89,14 +91,16 @@ public class RectPacker {
 					Rect bestFit = null;
 					for (int j = index; j < rects.size(); j++)
 						// rects.get(j).w < line.w
-						if ((line.y + rects.get(j).h <= maxHeight) && leftFit(line, rects.get(j).h)) {
+						if ((line.y + rects.get(j).h <= maxHeight)
+								&& leftFit(line, rects.get(j).h)) {
 							bestFit = rects.get(j);
 							break;
 						}
 					if (bestFit != null) {
 						System.out.println("HFF");
 						putRect(bestFit, line.x, line.y);
-						HorizontalLine newLine = new HorizontalLine(line.x + bestFit.w, line.y, line.w - bestFit.w);
+						HorizontalLine newLine = new HorizontalLine(line.x
+								+ bestFit.w, line.y, line.w - bestFit.w);
 						line.w = bestFit.w;
 						line.y += bestFit.h;
 						lines.add(newLine);
@@ -113,9 +117,10 @@ public class RectPacker {
 					for (int j = 0; j < n; j++)
 						for (int k = j + 1; k < n; k++)
 							if (((line.y + rects.get(index + j).h <= maxHeight)
-									&& ((line.y + rects.get(index + k).h <= maxHeight))
-									&& (rects.get(index + j).w + rects.get(index + k).w == line.w))) {
-								int score = rects.get(index + j).h + rects.get(index + k).h;
+									&& ((line.y + rects.get(index + k).h <= maxHeight)) && (rects
+									.get(index + j).w + rects.get(index + k).w == line.w))) {
+								int score = rects.get(index + j).h
+										+ rects.get(index + k).h;
 								if (score > bestScore) {
 									bestScore = score;
 									bestFit1 = rects.get(index + j);
@@ -126,8 +131,9 @@ public class RectPacker {
 						System.out.println("JWFF");
 						putRect(bestFit1, line.x, line.y);
 						putRect(bestFit2, line.x + bestFit1.w, line.y);
-						HorizontalLine newLine = new HorizontalLine(line.x + bestFit1.w, line.y + bestFit2.h,
-								line.w - bestFit1.w);
+						HorizontalLine newLine = new HorizontalLine(line.x
+								+ bestFit1.w, line.y + bestFit2.h, line.w
+								- bestFit1.w);
 						line.y += bestFit1.h;
 						line.w = bestFit1.w;
 						lines.add(newLine);
@@ -148,7 +154,8 @@ public class RectPacker {
 					if (bestFit != null) {
 						System.out.println("PF");
 						putRect(bestFit, line.x, line.y);
-						HorizontalLine newLine = new HorizontalLine(line.x + bestFit.w, line.y, line.w - bestFit.w);
+						HorizontalLine newLine = new HorizontalLine(line.x
+								+ bestFit.w, line.y, line.w - bestFit.w);
 						line.y += bestFit.h;
 						line.w = bestFit.w;
 						lines.add(newLine);
@@ -203,7 +210,8 @@ public class RectPacker {
 		r.y = y;
 		r.layer = currentLayer;
 		rects.remove(r);
-		System.out.println("PutRect " + x + " " + y + " " + r.w + " " + r.h + " " + currentLayer);
+		System.out.println("PutRect " + x + " " + y + " " + r.w + " " + r.h
+				+ " " + currentLayer);
 	}
 
 	private void checkAndMerge() {

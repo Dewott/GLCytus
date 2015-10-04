@@ -10,8 +10,10 @@ public class PausePanel extends Base {
 		String folder = "assets/ui/GamePlay/";
 		loadSprite(folder, "pause.prefab.json");
 
-		enteranim = ResourceLoader.loadMorphingAnimation(folder, "pause_enter.anim.json", false);
-		leaveanim = ResourceLoader.loadMorphingAnimation(folder, "pause_leave.anim.json", false);
+		enteranim = ResourceLoader.loadMorphingAnimation(folder,
+				"pause_enter.anim.json", false);
+		leaveanim = ResourceLoader.loadMorphingAnimation(folder,
+				"pause_leave.anim.json", false);
 	}
 
 	public void enter(double time) {

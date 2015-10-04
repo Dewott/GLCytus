@@ -14,7 +14,8 @@ public class Preferences {
 	public static int fxGain = 10;
 
 	public static void load() throws Exception {
-		BufferedReader in = new BufferedReader(new FileReader("preferences.txt"));
+		BufferedReader in = new BufferedReader(
+				new FileReader("preferences.txt"));
 		String str = in.readLine();
 		while (str != null) {
 			String part[] = str.split("\\=");

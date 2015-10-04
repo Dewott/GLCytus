@@ -63,8 +63,9 @@ public class Drag extends Note {
 					Node lastnode = nodes.get(n - 1);
 					if (lastnode.judgement != -1) {
 						dlight.moveTo(lastnode.x, lastnode.y);
-						dlight.addTransform(new Transform(Transform.ROTATION, Transform.LINEAR, etime, etime + 1 / 4.0,
-								0, Math.PI));
+						dlight.addTransform(new Transform(Transform.ROTATION,
+								Transform.LINEAR, etime, etime + 1 / 4.0, 0,
+								Math.PI));
 						blow.addChild(dlight, true);
 						arrexp.play(p);
 						blow.play(p);
@@ -75,9 +76,12 @@ public class Drag extends Note {
 					p.notes.remove(this);
 				return;
 			}
-			double pos = (p.time - nodes.get(i - 1).stime) / (nodes.get(i).stime - nodes.get(i - 1).stime);
-			int cx = (int) ((nodes.get(i).x - nodes.get(i - 1).x) * pos + nodes.get(i - 1).x);
-			int cy = (int) ((nodes.get(i).y - nodes.get(i - 1).y) * pos + nodes.get(i - 1).y);
+			double pos = (p.time - nodes.get(i - 1).stime)
+					/ (nodes.get(i).stime - nodes.get(i - 1).stime);
+			int cx = (int) ((nodes.get(i).x - nodes.get(i - 1).x) * pos + nodes
+					.get(i - 1).x);
+			int cy = (int) ((nodes.get(i).y - nodes.get(i - 1).y) * pos + nodes
+					.get(i - 1).y);
 			double angle = calcAngle(i - 1, i);
 			shadow.moveTo(cx, cy);
 			shadow.rotate(angle, 0, 0);
@@ -135,20 +139,25 @@ public class Drag extends Note {
 
 		double ntime = page * p.beat - p.pshift;
 		head.clearTransforms();
-		head.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, stime - p.beat, stime - p.beat / 2, 0, 1));
+		head.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR,
+				stime - p.beat, stime - p.beat / 2, 0, 1));
 
 		int popupmode = 2;
 		switch (popupmode) {
 		case 0:// None
 			break;
 		case 1:// Default
-			head.addTransform(new Transform(Transform.SCALE, Transform.LINEAR, stime - p.beat / 2, stime, 0.8, 1));
-			nearadd.addTransform(new Transform(Transform.SCALE, Transform.LINEAR, stime - p.beat / 2, stime, 0.8, 1));
+			head.addTransform(new Transform(Transform.SCALE, Transform.LINEAR,
+					stime - p.beat / 2, stime, 0.8, 1));
+			nearadd.addTransform(new Transform(Transform.SCALE,
+					Transform.LINEAR, stime - p.beat / 2, stime, 0.8, 1));
 			break;
 
 		case 2:// Grouped
-			head.addTransform(new Transform(Transform.SCALE, Transform.LINEAR, ntime - p.beat / 2, ntime, 0.5, 1));
-			nearadd.addTransform(new Transform(Transform.SCALE, Transform.LINEAR, ntime - p.beat / 2, ntime, 0.5, 1));
+			head.addTransform(new Transform(Transform.SCALE, Transform.LINEAR,
+					ntime - p.beat / 2, ntime, 0.5, 1));
+			nearadd.addTransform(new Transform(Transform.SCALE,
+					Transform.LINEAR, ntime - p.beat / 2, ntime, 0.5, 1));
 			break;
 		}
 
@@ -157,10 +166,12 @@ public class Drag extends Note {
 		blow = new Animation("drag_head_blow", etime, etime + 1 / 6.0);
 		blow.moveTo(nodes.get(n - 1).x, nodes.get(n - 1).y);
 		blow.clearTransforms();
-		blow.addTransform(
-				new Transform(Transform.ROTATION, Transform.LINEAR, etime, etime + 1 / 4.0, 0, Math.PI * 1.5));
-		blow.addTransform(new Transform(Transform.SCALE, Transform.LINEAR, etime, etime + 1 / 4.0, 1, 2));
-		blow.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, etime, etime + 1 / 4.0, 1, 0.5));
+		blow.addTransform(new Transform(Transform.ROTATION, Transform.LINEAR,
+				etime, etime + 1 / 4.0, 0, Math.PI * 1.5));
+		blow.addTransform(new Transform(Transform.SCALE, Transform.LINEAR,
+				etime, etime + 1 / 4.0, 1, 2));
+		blow.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR,
+				etime, etime + 1 / 4.0, 1, 0.5));
 	}
 
 	public void judge(double time) {
@@ -193,11 +204,13 @@ public class Drag extends Note {
 
 			ps = new Sprite("node_flash_04");
 			ps.moveTo(x, y);
-			ps.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, time - p.beat, time - p.beat / 2, 0, 1));
+			ps.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR,
+					time - p.beat, time - p.beat / 2, 0, 1));
 
 			nps = new Sprite("node_flash_01");
 			nps.moveTo(x, y);
-			nps.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, time - p.beat, time - p.beat / 2, 0, 1));
+			nps.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR,
+					time - p.beat, time - p.beat / 2, 0, 1));
 		}
 
 		public void paint() {
@@ -218,7 +231,8 @@ public class Drag extends Note {
 				p.addCombo(-1); // Miss
 				Animation judgeanim = GamePlayAnimationPreset.get("judge_miss");
 				judgeanim.moveTo(x, y);
-				ps.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, p.time, p.time + 1 / 3.0, 1, 0));
+				ps.addTransform(new Transform(Transform.ALPHA,
+						Transform.LINEAR, p.time, p.time + 1 / 3.0, 1, 0));
 				judgeanim.addChild(ps, true);
 				judgeanim.play(p, p.time);
 				p.notes.remove(this);
@@ -235,7 +249,8 @@ public class Drag extends Note {
 				judgeanim = GamePlayAnimationPreset.get("judge_perfect");
 				expanim = GamePlayAnimationPreset.get("critical_explosion");
 				judgeanim.scale(0.75);
-			} else {
+			}
+			else{
 				judgement = 1; // Perfect TP70;
 				judgeanim = GamePlayAnimationPreset.get("judge_perfect");
 				if (time > stime)

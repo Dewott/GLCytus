@@ -45,7 +45,8 @@ public class ResourceLoader {
 		r.readLine();
 		String str = r.readLine();
 		str = str.substring(18);
-		font.lineheight = Double.parseDouble(str.substring(0, str.indexOf(' ')));
+		font.lineheight = Double
+				.parseDouble(str.substring(0, str.indexOf(' ')));
 
 		str = r.readLine();
 		String fname = str.substring(str.indexOf("\"") + 1, str.length() - 1);
@@ -112,7 +113,8 @@ public class ResourceLoader {
 		return font;
 	}
 
-	public static Animation loadAnimation(String folder, String name) throws Exception {
+	public static Animation loadAnimation(String folder, String name)
+			throws Exception {
 		if (anims.containsKey(name))
 			return anims.get(name);
 		JSONObject obj = loadJSONObjectFromFile(folder, name);
@@ -140,7 +142,8 @@ public class ResourceLoader {
 		return atlas;
 	}
 
-	public static Sprite loadSprite(String folder, Sprite s, JSONObject obj) throws Exception {
+	public static Sprite loadSprite(String folder, Sprite s, JSONObject obj)
+			throws Exception {
 		if (s == null)
 			s = new Sprite();
 		if (obj.containsKey("Font")) {
@@ -224,18 +227,21 @@ public class ResourceLoader {
 		return s;
 	}
 
-	public static Texture2D loadTexture(String folder, String name) throws Exception {
+	public static Texture2D loadTexture(String folder, String name)
+			throws Exception {
 		File f = getFile(folder, name);
 		if (textures.containsKey(f.getName()))
 			return textures.get(f.getName());
-		TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), f, false, f.getName().split("\\.")[1]);
+		TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), f,
+				false, f.getName().split("\\.")[1]);
 		Texture2D t = new Texture2D(data);
 		textures.put(f.getName(), t);
 		Renderer.currentInstance.addTexture(t);
 		return t;
 	}
 
-	public static MorphingAnimation loadMorphingAnimation(String folder, String path, boolean loop) throws Exception {
+	public static MorphingAnimation loadMorphingAnimation(String folder,
+			String path, boolean loop) throws Exception {
 		File f = getFile(folder, path);
 		if (mpanims.containsKey(f.getName()))
 			return mpanims.get(f.getName());
@@ -297,11 +303,13 @@ public class ResourceLoader {
 		return new BufferedReader(new FileReader(f));
 	}
 
-	public static BufferedReader getBufferedReader(String folder, String name) throws Exception {
+	public static BufferedReader getBufferedReader(String folder, String name)
+			throws Exception {
 		return getBufferedReader(getFile(folder, name));
 	}
 
-	public static BufferedReader getBufferedReader(String path) throws Exception {
+	public static BufferedReader getBufferedReader(String path)
+			throws Exception {
 		return getBufferedReader(getFile(path));
 	}
 
@@ -310,11 +318,13 @@ public class ResourceLoader {
 		return JSON.parseObject(content);
 	}
 
-	public static JSONObject loadJSONObjectFromFile(String folder, String name) throws Exception {
+	public static JSONObject loadJSONObjectFromFile(String folder, String name)
+			throws Exception {
 		return loadJSONObjectFromFile(getFile(folder, name));
 	}
 
-	public static JSONObject loadJSONObjectFromFile(String path) throws Exception {
+	public static JSONObject loadJSONObjectFromFile(String path)
+			throws Exception {
 		return loadJSONObjectFromFile(getFile(path));
 	}
 }
