@@ -1,5 +1,7 @@
 package glcytus.graphics;
 
+import glcytus.graphics.Texture2D;
+
 public abstract class Renderer {
 	public static Renderer currentInstance = null;
 

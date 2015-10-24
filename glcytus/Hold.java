@@ -9,14 +9,12 @@ public class Hold extends Note {
 	public double y2 = 0;
 	double judgetime1 = -1, judgetime2 = -1;
 	Sprite bar = null;
-	Sprite head = null, shadow = null, light = null,
-			nearadd = null;
+	Sprite head = null, shadow = null, light = null, nearadd = null;
 	Sprite bshadow = null;
 	Animation hold1 = null, hold2 = null, light2 = null, flash = null;
 	boolean playsound = false;
 
-	public Hold(NoteChartPlayer p, int id, double time, double holdtime,
-			double x, double y) {
+	public Hold(NoteChartPlayer p, int id, double time, double holdtime, double x, double y) {
 		this.p = p;
 		this.id = id;
 		this.x = x;
@@ -31,10 +29,10 @@ public class Hold extends Note {
 
 		bshadow = new Sprite("beat_shadow");
 		bshadow.moveTo(x, y);
-		bshadow.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR,
-				stime, stime + 1 / 6.0, 1, 0).asLoopTransform());
-		bshadow.addTransform(new Transform(Transform.SCALE, Transform.LINEAR,
-				stime, stime + 1 / 6.0, 0, 3).asLoopTransform());
+		bshadow.addTransform(
+				new Transform(Transform.ALPHA, Transform.LINEAR, stime, stime + 1 / 6.0, 1, 0).asLoopTransform());
+		bshadow.addTransform(
+				new Transform(Transform.SCALE, Transform.LINEAR, stime, stime + 1 / 6.0, 0, 3).asLoopTransform());
 
 		hold1 = GamePlayAnimationPreset.get("hold_pressing_1");
 		hold1.moveTo(x, y);
@@ -57,18 +55,15 @@ public class Hold extends Note {
 		shadow.setAnchor(0.5, 0.9);
 		nearadd = new Sprite("near_add");
 		nearadd.moveTo(x, y);
-		
+
 		flash = GamePlayAnimationPreset.get("beat_flash");
 		flash.moveTo(x, y);
 		flash.stime = time - p.beat;
 		flash.playToAndStop(3);
 
 		double ntime = time - p.beat;
-		head.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR,
-				ntime, ntime + p.beat / 4, 0, 1));
-		flash.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR,
-				ntime, ntime + p.beat / 2, 0, 1));
-		
+		head.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, ntime, ntime + p.beat / 4, 0, 1));
+		flash.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, ntime, ntime + p.beat / 2, 0, 1));
 
 		if (page % 2 == 1) {
 			head.flipV();
@@ -85,7 +80,7 @@ public class Hold extends Note {
 		if (p.time > stime) {
 			if ((judgetime1 != -1) && (!playsound)) {
 				playsound = true;
-				p.playSound(p.sound,(float)(Preferences.fxGain/10.0));
+				p.playSound(p.sound, (float) (Preferences.fxGain / 10.0));
 			}
 			bar.setHeight(Math.abs(y2 - y));
 			bar.paint(p.renderer, p.time);
@@ -98,8 +93,7 @@ public class Hold extends Note {
 				if (p.time - stime > 0.3) {
 					p.addCombo(-1); // Miss
 					p.notes.remove(this);
-					Animation vanish = GamePlayAnimationPreset
-							.get("beat_vanish");
+					Animation vanish = GamePlayAnimationPreset.get("beat_vanish");
 					Animation miss = GamePlayAnimationPreset.get("judge_miss");
 					vanish.moveTo(x, y);
 					miss.moveTo(x, y);
@@ -131,11 +125,11 @@ public class Hold extends Note {
 			bar.paint(p.renderer, p.time);
 			head.paint(p.renderer, p.time);
 
-			if ((p.page == page) && (flash.stopAt != -1)){
+			if ((p.page == page) && (flash.stopAt != -1)) {
 				flash.stopAt = -1;
 				flash.status = Animation.STATUS_PLAY;
-				flash.stime = page*p.beat-p.pshift-4/27.0;
-				flash.etime = page*p.beat-p.pshift+5/27.0;
+				flash.stime = page * p.beat - p.pshift - 4 / 27.0;
+				flash.etime = page * p.beat - p.pshift + 5 / 27.0;
 			}
 			flash.paint(p.renderer, p.time);
 		}

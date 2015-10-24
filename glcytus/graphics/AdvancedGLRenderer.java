@@ -50,10 +50,11 @@ public class AdvancedGLRenderer extends Renderer {
 
 	private FloatBuffer buffer = null;
 	private int shaderProgram = 0;
-	private int vao = 0, vbo = 0;
+	private int vao = 0, vbo = 0, tex_loc = 0;
 	private int drawCalls = 0;
 	private int startIndex[] = new int[MAX_OBJECT_COUNT];
 	private int vertexCount[] = new int[MAX_OBJECT_COUNT];
+	private int texNames[] = new int[MAX_OBJECT_COUNT];
 	private int currentIndex = 0;
 
 	boolean initialized = false;
@@ -80,8 +81,7 @@ public class AdvancedGLRenderer extends Renderer {
 		int matrix_loc = gl.glGetUniformLocation(shaderProgram, "matrix");
 
 		float mat[] = new float[16];
-		FloatUtil
-				.makeOrtho(mat, 0, true, -512f, 512f, -341.5f, 341.5f, 1f, -1f);
+		FloatUtil.makeOrtho(mat, 0, true, -512f, 512f, -341.5f, 341.5f, 1f, -1f);
 		gl.glUniformMatrix4fv(matrix_loc, 1, false, FloatBuffer.wrap(mat));
 
 		// Generate VAO & VBO names
@@ -95,8 +95,7 @@ public class AdvancedGLRenderer extends Renderer {
 		// Buffer bindings & Data specifying
 		gl.glBindVertexArray(vao);
 		gl.glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		gl.glBufferData(GL_ARRAY_BUFFER, MAX_OBJECT_COUNT * 144, null,
-				GL_DYNAMIC_DRAW);
+		gl.glBufferData(GL_ARRAY_BUFFER, MAX_OBJECT_COUNT * 144, null, GL_DYNAMIC_DRAW);
 		gl.glVertexAttribPointer(pos_loc, 2, GL_FLOAT, false, 36, 0);
 		gl.glEnableVertexAttribArray(pos_loc);
 		gl.glVertexAttribPointer(color_loc, 4, GL_FLOAT, false, 36, 8);
@@ -137,20 +136,15 @@ public class AdvancedGLRenderer extends Renderer {
 				i = tex.rect.layer;
 				gl.glActiveTexture(GL_TEXTURE0 + i);
 				gl.glBindTexture(GL_TEXTURE_2D, texName[i]);
-				gl.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, textureSize,
-						textureSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, null);
-				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-						GL_LINEAR);
-				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-						GL_LINEAR);
-				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-						GL_CLAMP_TO_EDGE);
-				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-						GL_CLAMP_TO_EDGE);
+				gl.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, textureSize, textureSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+						null);
+				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			}
-			gl.glTexSubImage2D(GL_TEXTURE_2D, 0, tex.rect.x, tex.rect.y,
-					tex.rect.w, tex.rect.h, tex.data.getPixelFormat(),
-					tex.data.getPixelType(), tex.data.getBuffer());
+			gl.glTexSubImage2D(GL_TEXTURE_2D, 0, tex.rect.x, tex.rect.y, tex.rect.w, tex.rect.h,
+					tex.data.getPixelFormat(), tex.data.getPixelType(), tex.data.getBuffer());
 		}
 
 		/*
@@ -165,12 +159,12 @@ public class AdvancedGLRenderer extends Renderer {
 		 * e){} System.exit(1);
 		 */
 
-		int tex_loc = gl.glGetUniformLocation(shaderProgram, "tex");
+		tex_loc = gl.glGetUniformLocation(shaderProgram, "tex");
 		/*
 		 * //loc(tex[i])=loc(tex[0])+i for(i=0;i<n;i++)
 		 * gl.glUniform1i(tex_loc+i,i);
 		 */
-		gl.glUniform1i(tex_loc, 0);
+		// gl.glUniform1i(tex_loc, 0);
 
 		int texSize_loc = gl.glGetUniformLocation(shaderProgram, "textureSize");
 		gl.glUniform1f(texSize_loc, textureSize);
@@ -180,11 +174,19 @@ public class AdvancedGLRenderer extends Renderer {
 	}
 
 	public void addRenderTask(RenderTask task) {
-		if ((task.blendingAdd && (drawCalls % 2 == 0))
-				|| ((!task.blendingAdd) && (drawCalls % 2 == 1))) {
+		if ((task.blendingAdd && (drawCalls % 2 == 0)) || ((!task.blendingAdd) && (drawCalls % 2 == 1))) {
 			drawCalls++;
 			startIndex[drawCalls] = currentIndex;
+			texNames[drawCalls] = task.img.texture.rect.layer;
+		} else if ((task.img != null) && (texNames[drawCalls] != task.img.texture.rect.layer)) {
+			startIndex[drawCalls + 1] = currentIndex;
+			texNames[drawCalls + 1] = 0;
+
+			drawCalls += 2;
+			startIndex[drawCalls] = currentIndex;
+			texNames[drawCalls] = task.img.texture.rect.layer;
 		}
+
 		for (int i = 0; i < 4; i++) {
 			buffer.put((float) task.dstPts[i * 2]);
 			buffer.put((float) task.dstPts[i * 2 + 1]);
@@ -207,6 +209,7 @@ public class AdvancedGLRenderer extends Renderer {
 		buffer.flip();
 		gl.glBufferSubData(GL_ARRAY_BUFFER, 0, currentIndex * 36, buffer);
 		for (int i = 0; i <= drawCalls; i++) {
+			gl.glUniform1i(tex_loc, texNames[i]);
 			if (i % 2 == 0)
 				gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			else
@@ -227,8 +230,7 @@ public class AdvancedGLRenderer extends Renderer {
 
 	private void loadShader(int shaderName, String shaderCode) {
 		int a[] = new int[2];
-		gl.glShaderSource(shaderName, 1, new String[] { shaderCode },
-				new int[] { shaderCode.length() }, 0);
+		gl.glShaderSource(shaderName, 1, new String[] { shaderCode }, new int[] { shaderCode.length() }, 0);
 		gl.glCompileShader(shaderName);
 		gl.glGetShaderiv(shaderName, GL_COMPILE_STATUS, a, 0);
 		gl.glGetShaderiv(shaderName, GL_INFO_LOG_LENGTH, a, 1);

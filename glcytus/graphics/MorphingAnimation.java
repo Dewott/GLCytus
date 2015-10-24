@@ -14,10 +14,8 @@ public class MorphingAnimation {
 	public double endtime = 0;
 	public HashMap<String, LinkedList<Transform>> data = new HashMap<String, LinkedList<Transform>>();
 
-	public MorphingAnimation(String folder, String filename, boolean loop)
-			throws Exception {
-		JSONObject anim = ResourceLoader.loadJSONObjectFromFile(folder,
-				filename);
+	public MorphingAnimation(String folder, String filename, boolean loop) throws Exception {
+		JSONObject anim = ResourceLoader.loadJSONObjectFromFile(folder, filename);
 		boolean alignmentEnd = false;
 		if (anim.containsKey("Alignment"))
 			alignmentEnd = anim.getString("Alignment").equals("End");
@@ -33,8 +31,7 @@ public class MorphingAnimation {
 			if (obj.containsKey("Y"))
 				s.y = obj.getDoubleValue("Y");
 			if (obj.containsKey("Rotation"))
-				s.rotationAngle[0] = Math.toRadians(obj
-						.getDoubleValue("Rotation"));
+				s.rotationAngle[0] = Math.toRadians(obj.getDoubleValue("Rotation"));
 			if (obj.containsKey("ScaleX"))
 				s.sx = obj.getDoubleValue("ScaleX");
 			if (obj.containsKey("ScaleY"))
@@ -107,8 +104,8 @@ public class MorphingAnimation {
 					double delta = child.getDoubleValue("Delta");
 					if (type == Transform.ROTATION)
 						delta = Math.toRadians(delta);
-					Transform t = new Transform(type, Transform.LINEAR, time,
-							time + dur, sval, sval + delta, false, false);
+					Transform t = new Transform(type, Transform.LINEAR, time, time + dur, sval, sval + delta, false,
+							false);
 					if (loop)
 						lt.addTransform(t);
 					else

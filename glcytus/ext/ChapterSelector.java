@@ -10,12 +10,9 @@ public class ChapterSelector extends Base {
 		String folder = "assets/ui/ChapterSelector/";
 		loadSprite(folder, "clear_info_bar.prefab.json");
 
-		enteranim = ResourceLoader.loadMorphingAnimation(folder,
-				"clear_info_enter.anim.json", false);
-		switchanim = ResourceLoader.loadMorphingAnimation(folder,
-				"clear_info_switch.anim.json", false);
-		backanim = ResourceLoader.loadMorphingAnimation(folder,
-				"clear_info_back.anim.json", false);
+		enteranim = ResourceLoader.loadMorphingAnimation(folder, "clear_info_enter.anim.json", false);
+		switchanim = ResourceLoader.loadMorphingAnimation(folder, "clear_info_switch.anim.json", false);
+		backanim = ResourceLoader.loadMorphingAnimation(folder, "clear_info_back.anim.json", false);
 	}
 
 	public void ciEnter(double time) {

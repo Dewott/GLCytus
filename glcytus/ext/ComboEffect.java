@@ -21,12 +21,10 @@ public class ComboEffect extends Base {
 		text2 = (TextSprite) back.elements.get("text");
 		text2.setAnchor("Left");
 		text2.moveTo(-200, 150);
-		backanim = ResourceLoader.loadMorphingAnimation(folder,
-				"combo_effect_back.anim.json", false);
+		backanim = ResourceLoader.loadMorphingAnimation(folder, "combo_effect_back.anim.json", false);
 		addChild(back, true);
 
-		frontanim = ResourceLoader.loadMorphingAnimation(folder,
-				"combo_effect_front.anim.json", false);
+		frontanim = ResourceLoader.loadMorphingAnimation(folder, "combo_effect_front.anim.json", false);
 	}
 
 	public void show(double time, int combo) {

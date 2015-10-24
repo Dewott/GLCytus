@@ -41,8 +41,7 @@ public class RenderTask {
 		}
 		Matrix4 mat = s.getTransformMatrix();
 		for (int i = 0; i < 4; i++) {
-			float src[] = new float[] { (float) srcPts[i * 2],
-					(float) srcPts[i * 2 + 1], 0f, 1f };
+			float src[] = new float[] { (float) srcPts[i * 2], (float) srcPts[i * 2 + 1], 0f, 1f };
 			float dst[] = new float[4];
 			mat.multVec(src, dst);
 			dstPts[i * 2] = dst[0];
