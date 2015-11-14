@@ -8,7 +8,7 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.*;
 
 public class Main extends JFrame {
 	public Main() throws Exception {
@@ -32,7 +32,7 @@ public class Main extends JFrame {
 		add(canvas);
 
 		setVisible(true);
-		new FPSAnimator(canvas, 120, false).start();
+		new Animator(canvas).start();
 		Thread.sleep(1000);
 		p.start();
 	}

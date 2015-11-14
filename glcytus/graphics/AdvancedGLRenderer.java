@@ -136,7 +136,7 @@ public class AdvancedGLRenderer extends Renderer {
 				i = tex.rect.layer;
 				gl.glActiveTexture(GL_TEXTURE0 + i);
 				gl.glBindTexture(GL_TEXTURE_2D, texName[i]);
-				gl.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, textureSize, textureSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+				gl.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureSize, textureSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
 						null);
 				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
