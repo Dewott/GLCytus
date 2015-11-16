@@ -86,7 +86,9 @@ public class NoteChartPlayer implements GLEventListener {
 					new File("temp.wav").delete();
 				new Converter().convert(music, "temp.wav");
 			}
+
 			bgm = loadSoundFile(new File("temp.wav"));
+
 			if (Preferences.clickfx == 1)
 				sound = loadSoundFile(new File("assets/sounds/beat1.wav"));
 		} catch (Exception e) {
@@ -323,6 +325,21 @@ public class NoteChartPlayer implements GLEventListener {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 
+		int a[] = new int[1];
+		LinkedList<Integer> delList = new LinkedList<Integer>();
+		for (Integer i : snd_srcs) {
+			al.alGetSourcei(i, AL_SOURCE_STATE, a, 0);
+			if (a[0] == AL_STOPPED) {
+				if (i == mplayer) {
+					stopped = true;
+					continue;
+				}
+				al.alDeleteSources(1, new int[] { i }, 0);
+				delList.add(i);
+			}
+		}
+		snd_srcs.removeAll(delList);
+
 		if (!stopped) {
 			// interpolation
 			double newTime = getMediaTime(mplayer);
@@ -336,6 +353,7 @@ public class NoteChartPlayer implements GLEventListener {
 				time = newTime;
 			}
 		}
+
 		page = calcPage(time);
 		double liney = calcY(time);
 
@@ -393,23 +411,6 @@ public class NoteChartPlayer implements GLEventListener {
 		scanline.moveTo(0, liney);
 		scanline.paint(renderer, time);
 		renderer.flushTaskQueue();
-
-		if (stopped)
-			return;
-		int a[] = new int[1];
-		LinkedList<Integer> delList = new LinkedList<Integer>();
-		for (Integer i : snd_srcs) {
-			al.alGetSourcei(i, AL_SOURCE_STATE, a, 0);
-			if (a[0] == AL_STOPPED) {
-				if (i == mplayer) {
-					stopped = true;
-					continue;
-				}
-				al.alDeleteSources(1, new int[] { i }, 0);
-				delList.add(i);
-			}
-		}
-		snd_srcs.removeAll(delList);
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
