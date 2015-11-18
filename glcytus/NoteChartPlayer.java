@@ -60,7 +60,7 @@ public class NoteChartPlayer implements GLEventListener {
 
 	static LinkedList<Integer> snd_srcs = new LinkedList<Integer>();
 	int mplayer = -1, bgm = -1, sound = -1;
-	boolean stopped = true;
+	boolean started = false, stopped = true;
 
 	double lastMediaTime = 0;
 	long lastUpdateTime = 0;
@@ -248,8 +248,8 @@ public class NoteChartPlayer implements GLEventListener {
 	}
 
 	public void start() {
-		while (!renderer.isInitialized())
-			;
+		// while (!renderer.isInitialized());
+		started = true;
 		stopped = false;
 		mplayer = playSound(bgm, (float) (Preferences.bgmGain / 10.0));
 	}
@@ -330,7 +330,8 @@ public class NoteChartPlayer implements GLEventListener {
 		for (Integer i : snd_srcs) {
 			al.alGetSourcei(i, AL_SOURCE_STATE, a, 0);
 			if (a[0] == AL_STOPPED) {
-				if (i == mplayer) {
+				if ((i == mplayer) && started) {
+					started = false;
 					stopped = true;
 					continue;
 				}
