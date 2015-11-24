@@ -1,14 +1,14 @@
 package glcytus.graphics;
 
-import glcytus.util.ResourceLoader;
-import glcytus.util.SpriteState;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import glcytus.util.ResourceLoader;
+import glcytus.util.SpriteState;
 
 public class MorphingAnimation {
 	public double endtime = 0;

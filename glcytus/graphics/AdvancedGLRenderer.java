@@ -3,14 +3,12 @@ package glcytus.graphics;
 import static javax.media.opengl.GL.GL_ARRAY_BUFFER;
 import static javax.media.opengl.GL.GL_BLEND;
 import static javax.media.opengl.GL.GL_CLAMP_TO_EDGE;
-import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static javax.media.opengl.GL.GL_DYNAMIC_DRAW;
 import static javax.media.opengl.GL.GL_FLOAT;
 import static javax.media.opengl.GL.GL_LINEAR;
 import static javax.media.opengl.GL.GL_ONE;
 import static javax.media.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
 import static javax.media.opengl.GL.GL_RGBA;
-import static javax.media.opengl.GL.GL_RGBA4;
 import static javax.media.opengl.GL.GL_SRC_ALPHA;
 import static javax.media.opengl.GL.GL_TEXTURE0;
 import static javax.media.opengl.GL.GL_TEXTURE_2D;
@@ -24,9 +22,9 @@ import static javax.media.opengl.GL2ES2.GL_COMPILE_STATUS;
 import static javax.media.opengl.GL2ES2.GL_FRAGMENT_SHADER;
 import static javax.media.opengl.GL2ES2.GL_INFO_LOG_LENGTH;
 import static javax.media.opengl.GL2ES2.GL_LINK_STATUS;
+import static javax.media.opengl.GL2ES2.GL_SHADING_LANGUAGE_VERSION;
 import static javax.media.opengl.GL2ES2.GL_VERTEX_SHADER;
 import static javax.media.opengl.GL2GL3.GL_QUADS;
-import glcytus.util.packrect.RectPacker;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -40,6 +38,8 @@ import javax.media.opengl.DebugGL2;
 import javax.media.opengl.GL2;
 
 import com.jogamp.opengl.math.FloatUtil;
+
+import glcytus.util.packrect.RectPacker;
 
 public class AdvancedGLRenderer extends Renderer {
 	public static int MAX_OBJECT_COUNT = 512;
@@ -260,7 +260,8 @@ public class AdvancedGLRenderer extends Renderer {
 
 	private String getVertexShaderCode() {
 		StringBuilder sb = new StringBuilder();
-		if (gl.isGL3())
+		String glslVersion = gl.glGetString(GL_SHADING_LANGUAGE_VERSION).split(" ")[0];
+		if (glslVersion.compareTo("3.30") > 0)
 			sb.append("#version 330 core\n");
 		sb.append("uniform mat4 matrix;\n");
 		sb.append("uniform float textureSize;\n");
@@ -279,7 +280,8 @@ public class AdvancedGLRenderer extends Renderer {
 
 	private String getFragmentShaderCode() {
 		StringBuilder sb = new StringBuilder();
-		if (gl.isGL3())
+		String glslVersion = gl.glGetString(GL_SHADING_LANGUAGE_VERSION).split(" ")[0];
+		if (glslVersion.compareTo("3.30") > 0)
 			sb.append("#version 330 core\n");
 		sb.append("uniform sampler2D tex;\n");
 		sb.append("in vec4 color;\n");

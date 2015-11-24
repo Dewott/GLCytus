@@ -1,8 +1,8 @@
 package glcytus.ext;
 
-import glcytus.graphics.TextSprite;
-
 import java.text.DecimalFormat;
+
+import glcytus.graphics.TextSprite;
 
 public class Result extends Base {
 	Base diff = null, perfect = null, good = null, bad = null, miss = null;

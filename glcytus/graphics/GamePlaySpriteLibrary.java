@@ -1,12 +1,11 @@
 package glcytus.graphics;
 
-import glcytus.util.ResourceLoader;
-
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+
+import glcytus.util.ResourceLoader;
 
 public class GamePlaySpriteLibrary {
 	static HashMap<String, ImageHandle> map = new HashMap<String, ImageHandle>();
@@ -40,7 +39,7 @@ public class GamePlaySpriteLibrary {
 			img.scale(entry.getValue());
 		}
 
-		map.get("bar").setWidth(1024);
+		map.get("bar").setWidth(1280);
 		map.get("light_add").blendingAdd = true;
 	}
 

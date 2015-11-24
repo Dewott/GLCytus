@@ -1,11 +1,12 @@
 package glcytus;
 
+import java.util.ArrayList;
+
 import glcytus.graphics.Animation;
+import glcytus.graphics.BeatTransform;
 import glcytus.graphics.GamePlayAnimationPreset;
 import glcytus.graphics.Sprite;
 import glcytus.graphics.Transform;
-
-import java.util.ArrayList;
 
 public class Drag extends Note {
 	int n = 0;
@@ -136,6 +137,7 @@ public class Drag extends Note {
 		double ntime = page * p.beat - p.pshift;
 		head.clearTransforms();
 		head.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, stime - p.beat, stime - p.beat / 2, 0, 1));
+		head.addTransform(new BeatTransform(ntime, p.pshift, p.beat / 4));
 
 		int popupmode = 2;
 		switch (popupmode) {
@@ -175,7 +177,6 @@ public class Drag extends Note {
 
 	public static class Node extends Note {
 		Animation nflash = null, nexp = null, perfect = null;
-		Sprite ps = null, nps = null;
 
 		public Node(NoteChartPlayer p, int id, double time, double x, double y) {
 			this.p = p;
@@ -188,16 +189,12 @@ public class Drag extends Note {
 
 			nflash = GamePlayAnimationPreset.get("node_flash");
 			nflash.moveTo(x, y);
-			nflash.setStartTime(page * p.beat - p.pshift);
-			nflash.setEndTime(nflash.getStartTime() + 1 / 3.0);
-
-			ps = new Sprite("node_flash_04");
-			ps.moveTo(x, y);
-			ps.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, time - p.beat, time - p.beat / 2, 0, 1));
-
-			nps = new Sprite("node_flash_01");
-			nps.moveTo(x, y);
-			nps.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, time - p.beat, time - p.beat / 2, 0, 1));
+			nflash.stime = 0;
+			nflash.etime = -1;
+			nflash.updateImage(nflash.imgs[0]);
+			nflash.status = Animation.STATUS_STOP;
+			nflash.addTransform(
+					new Transform(Transform.ALPHA, Transform.LINEAR, time - p.beat, time - p.beat / 4, 0, 1));
 		}
 
 		public void paint() {
@@ -207,19 +204,20 @@ public class Drag extends Note {
 				return;
 			}
 			if (page == p.page) {
-				if (nflash.ended(p.time))
-					ps.paint(p.renderer, p.time);
-				else
-					nflash.paint(p.renderer, p.time);
-			} else
-				nps.paint(p.renderer, p.time);
+				if (nflash.stime == 0) {
+					nflash.status = Animation.STATUS_PLAY;
+					nflash.stopAt = nflash.n - 1;
+					nflash.stime = page * p.beat - p.pshift;
+				}
+			}
+			nflash.paint(p.renderer, p.time);
 
 			if (p.time > stime + 0.3) {
 				p.addCombo(-1); // Miss
 				Animation judgeanim = GamePlayAnimationPreset.get("judge_miss");
 				judgeanim.moveTo(x, y);
-				ps.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, p.time, p.time + 1 / 3.0, 1, 0));
-				judgeanim.addChild(ps, true);
+				nflash.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, p.time, p.time + 1 / 3.0, 1, 0));
+				judgeanim.addChild(nflash, true);
 				judgeanim.play(p, p.time);
 				p.notes.remove(this);
 			}

@@ -1,10 +1,10 @@
 package glcytus.ext;
 
+import java.util.LinkedHashMap;
+
 import glcytus.graphics.MorphingAnimation;
 import glcytus.graphics.Sprite;
 import glcytus.util.ResourceLoader;
-
-import java.util.LinkedHashMap;
 
 public class Base extends Sprite {
 	LinkedHashMap<String, Sprite> elements = new LinkedHashMap<String, Sprite>();

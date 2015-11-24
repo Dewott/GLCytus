@@ -1,14 +1,15 @@
 package glcytus;
 
-import java.io.*;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.jogamp.opengl.util.*;
+import com.jogamp.opengl.util.Animator;
 
 public class Main extends JFrame {
 	public Main() throws Exception {

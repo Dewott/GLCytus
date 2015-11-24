@@ -182,6 +182,51 @@ public class Sprite {
 			s.clearTransforms();
 	}
 
+	public double[] getBounds() {
+		RenderTask t = new RenderTask(this);
+
+		double minX = Math.min(t.dstPts[0], t.dstPts[2]);
+		minX = Math.min(minX, t.dstPts[4]);
+		minX = Math.min(minX, t.dstPts[6]);
+
+		double maxX = Math.max(t.dstPts[0], t.dstPts[2]);
+		maxX = Math.max(maxX, t.dstPts[4]);
+		maxX = Math.max(maxX, t.dstPts[6]);
+
+		double minY = Math.min(t.dstPts[1], t.dstPts[3]);
+		minY = Math.min(minY, t.dstPts[5]);
+		minY = Math.min(minY, t.dstPts[7]);
+
+		double maxY = Math.max(t.dstPts[1], t.dstPts[3]);
+		maxY = Math.max(maxY, t.dstPts[5]);
+		maxY = Math.max(maxY, t.dstPts[7]);
+
+		for (Sprite s : childs) {
+			RenderTask t2 = new RenderTask(s);
+			minX = Math.min(minX, t2.dstPts[0]);
+			minX = Math.min(minX, t2.dstPts[2]);
+			minX = Math.min(minX, t2.dstPts[4]);
+			minX = Math.min(minX, t2.dstPts[6]);
+
+			maxX = Math.max(maxX, t2.dstPts[0]);
+			maxX = Math.max(maxX, t2.dstPts[2]);
+			maxX = Math.max(maxX, t2.dstPts[4]);
+			maxX = Math.max(maxX, t2.dstPts[6]);
+
+			minY = Math.min(minY, t2.dstPts[1]);
+			minY = Math.min(minY, t2.dstPts[3]);
+			minY = Math.min(minY, t2.dstPts[5]);
+			minY = Math.min(minY, t2.dstPts[7]);
+
+			maxY = Math.max(maxY, t2.dstPts[1]);
+			maxY = Math.max(maxY, t2.dstPts[3]);
+			maxY = Math.max(maxY, t2.dstPts[5]);
+			maxY = Math.max(maxY, t2.dstPts[7]);
+		}
+
+		return new double[] { minX, maxX, minY, maxY };
+	}
+
 	public void addChild(Sprite s, boolean independent) {
 		s.father = this;
 		s.independent = independent;

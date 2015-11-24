@@ -1,9 +1,9 @@
 package glcytus.graphics;
 
-import glcytus.util.packrect.Rect;
-
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
+
+import glcytus.util.packrect.Rect;
 
 public final class Texture2D {
 	public Texture boundTextureObject = null;

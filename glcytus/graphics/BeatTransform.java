@@ -15,7 +15,7 @@ public class BeatTransform extends Transform {
 			return;
 
 		double pos = ((time + pshift) % beat) / beat;
-		double size = 1 + 0.05 * Math.max(Math.cos(pos * Math.PI * 2), 0);
+		double size = 1 + 0.08 * Math.max(Math.cos(pos * Math.PI * 2), 0);
 		s.scale(size);
 	}
 }

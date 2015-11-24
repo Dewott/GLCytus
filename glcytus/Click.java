@@ -52,7 +52,7 @@ public class Click extends Note {
 			nearadd.addTransform(new BeatTransform(ntime2, p.pshift, p.beat / 2));
 		}
 
-		circle.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, ntime1, ntime1 + p.beat / 2, 0, 1));
+		circle.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, ntime1, ntime1 + p.beat * 3 / 4, 0, 1));
 		nearadd.addTransform(
 				new Transform(Transform.ALPHA, Transform.LINEAR, time - p.beat / 2, time - p.beat * 0.4, 0, 1));
 		flash.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, ntime1, ntime1 + p.beat / 2, 0, 1));

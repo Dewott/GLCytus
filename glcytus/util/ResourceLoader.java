@@ -1,15 +1,5 @@
 package glcytus.util;
 
-import glcytus.graphics.Animation;
-import glcytus.graphics.Atlas;
-import glcytus.graphics.CFont;
-import glcytus.graphics.ImageHandle;
-import glcytus.graphics.MorphingAnimation;
-import glcytus.graphics.Renderer;
-import glcytus.graphics.Sprite;
-import glcytus.graphics.TextSprite;
-import glcytus.graphics.Texture2D;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -25,6 +15,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
+
+import glcytus.graphics.Animation;
+import glcytus.graphics.Atlas;
+import glcytus.graphics.CFont;
+import glcytus.graphics.ImageHandle;
+import glcytus.graphics.MorphingAnimation;
+import glcytus.graphics.Renderer;
+import glcytus.graphics.Sprite;
+import glcytus.graphics.TextSprite;
+import glcytus.graphics.Texture2D;
 
 public class ResourceLoader {
 	static HashMap<String, CFont> fonts = new HashMap<String, CFont>();

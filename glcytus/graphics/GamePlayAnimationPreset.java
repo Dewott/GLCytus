@@ -1,8 +1,8 @@
 package glcytus.graphics;
 
-import glcytus.util.ResourceLoader;
-
 import java.util.HashMap;
+
+import glcytus.util.ResourceLoader;
 
 public class GamePlayAnimationPreset {
 	static String flist[] = new String[] { "arrow_explode", "arrow_flash", "beat_flash", "beat_vanish",

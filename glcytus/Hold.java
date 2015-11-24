@@ -61,9 +61,8 @@ public class Hold extends Note {
 		flash.stime = time - p.beat;
 		flash.playToAndStop(3);
 
-		double ntime = time - p.beat;
-		head.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, ntime, ntime + p.beat / 4, 0, 1));
-		flash.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, ntime, ntime + p.beat / 2, 0, 1));
+		head.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, time - p.beat, time - p.beat / 4, 0, 1));
+		flash.addTransform(new Transform(Transform.ALPHA, Transform.LINEAR, time - p.beat, time - p.beat / 2, 0, 1));
 
 		if (page % 2 == 1) {
 			head.flipV();

@@ -1,11 +1,11 @@
 package glcytus.graphics;
 
-import glcytus.util.ResourceLoader;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
+
+import glcytus.util.ResourceLoader;
 
 public class Atlas {
 	public Texture2D texture = null;

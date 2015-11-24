@@ -1,19 +1,15 @@
 package glcytus;
 
-import static com.jogamp.openal.ALConstants.*;
-
-import glcytus.ext.ComboEffect;
-import glcytus.ext.SelectCover;
-import glcytus.graphics.AdvancedGLRenderer;
-import glcytus.graphics.Animation;
-import glcytus.graphics.ComboSmallPopTransform;
-import glcytus.graphics.GamePlayAnimationPreset;
-import glcytus.graphics.GamePlayFontLibrary;
-import glcytus.graphics.GamePlaySpriteLibrary;
-import glcytus.graphics.MaskBeatTransform;
-import glcytus.graphics.RenderTask;
-import glcytus.graphics.Sprite;
-import glcytus.graphics.TextSprite;
+import static com.jogamp.openal.ALConstants.AL_BUFFER;
+import static com.jogamp.openal.ALConstants.AL_FALSE;
+import static com.jogamp.openal.ALConstants.AL_GAIN;
+import static com.jogamp.openal.ALConstants.AL_LOOPING;
+import static com.jogamp.openal.ALConstants.AL_PITCH;
+import static com.jogamp.openal.ALConstants.AL_POSITION;
+import static com.jogamp.openal.ALConstants.AL_SEC_OFFSET;
+import static com.jogamp.openal.ALConstants.AL_SOURCE_STATE;
+import static com.jogamp.openal.ALConstants.AL_STOPPED;
+import static com.jogamp.openal.ALConstants.AL_VELOCITY;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,9 +23,26 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
-import com.jogamp.openal.*;
-import com.jogamp.openal.util.*;
+import com.jogamp.openal.AL;
+import com.jogamp.openal.ALFactory;
+import com.jogamp.openal.util.ALut;
+import com.jogamp.openal.util.WAVData;
+import com.jogamp.openal.util.WAVLoader;
 
+import glcytus.ext.ComboEffect;
+import glcytus.ext.Difficulty;
+import glcytus.ext.IconText;
+import glcytus.ext.SelectCover;
+import glcytus.graphics.AdvancedGLRenderer;
+import glcytus.graphics.Animation;
+import glcytus.graphics.ComboSmallPopTransform;
+import glcytus.graphics.GamePlayAnimationPreset;
+import glcytus.graphics.GamePlayFontLibrary;
+import glcytus.graphics.GamePlaySpriteLibrary;
+import glcytus.graphics.MaskBeatTransform;
+import glcytus.graphics.RenderTask;
+import glcytus.graphics.Sprite;
+import glcytus.graphics.TextSprite;
 import javazoom.jl.converter.Converter;
 
 public class NoteChartPlayer implements GLEventListener {
@@ -39,7 +52,7 @@ public class NoteChartPlayer implements GLEventListener {
 	public AdvancedGLRenderer renderer = null;
 	static AL al = null;
 
-	String songtitle = null;
+	String songtitle = "", diff = "";
 	NoteChart pdata = null;
 	ArrayList<Note> notes = new ArrayList<Note>();
 	double time = 0, beat = 0, pshift = 0;
@@ -53,6 +66,8 @@ public class NoteChartPlayer implements GLEventListener {
 	ComboEffect comboeffect = null;
 	TextSprite fscore = null, fcombosmall = null;
 	Sprite scanline = null;
+	Sprite icontext = null;
+	Sprite difficulty = null;
 
 	int combo = 0, maxcombo = 0;
 	double score = 0, tp = 0;
@@ -68,6 +83,7 @@ public class NoteChartPlayer implements GLEventListener {
 	public NoteChartPlayer(String songtitle, String diff) throws Exception {
 		try {
 			this.songtitle = songtitle;
+			this.diff = diff;
 			String folder = "assets/songs/" + songtitle + "/";
 			String chart = folder + songtitle + "." + diff + ".txt";
 			BufferedReader in = new BufferedReader(new FileReader(chart));
@@ -150,14 +166,20 @@ public class NoteChartPlayer implements GLEventListener {
 		try {
 			comboeffect = new ComboEffect();
 			bg = new SelectCover(songtitle);
+			icontext = new IconText(songtitle);
+			difficulty = new Difficulty(songtitle, diff);
 		} catch (Exception e) {
 			e.printStackTrace();
-			bg = new Sprite();
+			if (bg == null)
+				bg = new Sprite();
+			if (icontext == null)
+				icontext = new Sprite();
+			if (difficulty == null)
+				difficulty = new Sprite();
 		}
 		renderer.finish();
 
 		bgmask1 = new Sprite("gameplay_bg_mask");
-		// bgmask1.setSize(1024, 683);
 		bgmask1.setSize(1280, 853);
 		bgmask1.color[3] = 0.75;
 
@@ -210,6 +232,12 @@ public class NoteChartPlayer implements GLEventListener {
 		poptrans = new ComboSmallPopTransform();
 		combosmallbg.addTransform(poptrans);
 		fcombosmall.addTransform(poptrans);
+
+		icontext.scale(0.8);
+		double bounds[] = icontext.getBounds();
+		icontext.moveTo(-492 - bounds[0], -320 - bounds[2]);
+
+		difficulty.moveTo(440, -292);
 
 		scanline = new Sprite("bar");
 	}
@@ -264,7 +292,7 @@ public class NoteChartPlayer implements GLEventListener {
 		if (cpage % 2 == 1)
 			y = 1 - y;
 
-		return y * 533 - 266.5;
+		return y * 546.4 - 273.2;
 	}
 
 	public int calcPage(double time) {
@@ -368,6 +396,8 @@ public class NoteChartPlayer implements GLEventListener {
 		bgmask2.paint(renderer, time);
 		bgmask3.paint(renderer, time);
 		bgmask3flip.paint(renderer, time);
+		icontext.paint(renderer, time);
+		difficulty.paint(renderer, time);
 		titlemask.paint(renderer, time);
 		titlemaskflip.paint(renderer, time);
 		title.paint(renderer, time);
