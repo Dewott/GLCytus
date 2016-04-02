@@ -49,7 +49,7 @@ public class Preferences {
 				fxGain = val / 10.0;
 				break;
 			case "chartOffset":
-				chartOffset = val;
+				chartOffset = val / 1000.0;
 				break;
 			}
 			str = in.readLine();
