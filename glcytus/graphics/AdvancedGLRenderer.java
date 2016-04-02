@@ -1,30 +1,30 @@
 package glcytus.graphics;
 
-import static javax.media.opengl.GL.GL_ARRAY_BUFFER;
-import static javax.media.opengl.GL.GL_BLEND;
-import static javax.media.opengl.GL.GL_CLAMP_TO_EDGE;
-import static javax.media.opengl.GL.GL_DYNAMIC_DRAW;
-import static javax.media.opengl.GL.GL_FLOAT;
-import static javax.media.opengl.GL.GL_LINEAR;
-import static javax.media.opengl.GL.GL_ONE;
-import static javax.media.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
-import static javax.media.opengl.GL.GL_RGBA;
-import static javax.media.opengl.GL.GL_SRC_ALPHA;
-import static javax.media.opengl.GL.GL_TEXTURE0;
-import static javax.media.opengl.GL.GL_TEXTURE_2D;
-import static javax.media.opengl.GL.GL_TEXTURE_MAG_FILTER;
-import static javax.media.opengl.GL.GL_TEXTURE_MIN_FILTER;
-import static javax.media.opengl.GL.GL_TEXTURE_WRAP_S;
-import static javax.media.opengl.GL.GL_TEXTURE_WRAP_T;
-import static javax.media.opengl.GL.GL_UNPACK_ALIGNMENT;
-import static javax.media.opengl.GL.GL_UNSIGNED_BYTE;
-import static javax.media.opengl.GL2ES2.GL_COMPILE_STATUS;
-import static javax.media.opengl.GL2ES2.GL_FRAGMENT_SHADER;
-import static javax.media.opengl.GL2ES2.GL_INFO_LOG_LENGTH;
-import static javax.media.opengl.GL2ES2.GL_LINK_STATUS;
-import static javax.media.opengl.GL2ES2.GL_SHADING_LANGUAGE_VERSION;
-import static javax.media.opengl.GL2ES2.GL_VERTEX_SHADER;
-import static javax.media.opengl.GL2GL3.GL_QUADS;
+import static com.jogamp.opengl.GL.GL_ARRAY_BUFFER;
+import static com.jogamp.opengl.GL.GL_BLEND;
+import static com.jogamp.opengl.GL.GL_CLAMP_TO_EDGE;
+import static com.jogamp.opengl.GL.GL_DYNAMIC_DRAW;
+import static com.jogamp.opengl.GL.GL_FLOAT;
+import static com.jogamp.opengl.GL.GL_LINEAR;
+import static com.jogamp.opengl.GL.GL_ONE;
+import static com.jogamp.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
+import static com.jogamp.opengl.GL.GL_RGBA;
+import static com.jogamp.opengl.GL.GL_SRC_ALPHA;
+import static com.jogamp.opengl.GL.GL_TEXTURE0;
+import static com.jogamp.opengl.GL.GL_TEXTURE_2D;
+import static com.jogamp.opengl.GL.GL_TEXTURE_MAG_FILTER;
+import static com.jogamp.opengl.GL.GL_TEXTURE_MIN_FILTER;
+import static com.jogamp.opengl.GL.GL_TEXTURE_WRAP_S;
+import static com.jogamp.opengl.GL.GL_TEXTURE_WRAP_T;
+import static com.jogamp.opengl.GL.GL_UNPACK_ALIGNMENT;
+import static com.jogamp.opengl.GL.GL_UNSIGNED_BYTE;
+import static com.jogamp.opengl.GL2ES2.GL_COMPILE_STATUS;
+import static com.jogamp.opengl.GL2ES2.GL_FRAGMENT_SHADER;
+import static com.jogamp.opengl.GL2ES2.GL_INFO_LOG_LENGTH;
+import static com.jogamp.opengl.GL2ES2.GL_LINK_STATUS;
+import static com.jogamp.opengl.GL2ES2.GL_SHADING_LANGUAGE_VERSION;
+import static com.jogamp.opengl.GL2ES2.GL_VERTEX_SHADER;
+import static com.jogamp.opengl.GL2GL3.GL_QUADS;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -34,8 +34,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-import javax.media.opengl.DebugGL2;
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.DebugGL2;
+import com.jogamp.opengl.GL2;
 
 import com.jogamp.opengl.math.FloatUtil;
 
@@ -146,25 +146,7 @@ public class AdvancedGLRenderer extends Renderer {
 			gl.glTexSubImage2D(GL_TEXTURE_2D, 0, tex.rect.x, tex.rect.y, tex.rect.w, tex.rect.h,
 					tex.data.getPixelFormat(), tex.data.getPixelType(), tex.data.getBuffer());
 		}
-
-		/*
-		 * gl.glActiveTexture(GL_TEXTURE0); ByteBuffer
-		 * buf=ByteBuffer.allocateDirect
-		 * (67108864).order(ByteOrder.nativeOrder());
-		 * gl.glGetTexImage(GL_TEXTURE_2D,0,GL_RGBA,GL_UNSIGNED_BYTE,buf);
-		 * TextureData data = new
-		 * TextureData(GLProfile.getDefault(),GL_RGBA,4096
-		 * ,4096,0,GL_RGBA,GL_UNSIGNED_BYTE,false,false,false,buf,null); try{
-		 * TextureIO.write(data,new java.io.File("out.png")); }catch(Exception
-		 * e){} System.exit(1);
-		 */
-
 		tex_loc = gl.glGetUniformLocation(shaderProgram, "tex");
-		/*
-		 * //loc(tex[i])=loc(tex[0])+i for(i=0;i<n;i++)
-		 * gl.glUniform1i(tex_loc+i,i);
-		 */
-		// gl.glUniform1i(tex_loc, 0);
 
 		int texSize_loc = gl.glGetUniformLocation(shaderProgram, "textureSize");
 		gl.glUniform1f(texSize_loc, textureSize);
@@ -260,9 +242,7 @@ public class AdvancedGLRenderer extends Renderer {
 
 	private String getVertexShaderCode() {
 		StringBuilder sb = new StringBuilder();
-		String glslVersion = gl.glGetString(GL_SHADING_LANGUAGE_VERSION).split(" ")[0];
-		if (glslVersion.compareTo("3.30") > 0)
-			sb.append("#version 330 core\n");
+		sb.append("#version 150 core\n");
 		sb.append("uniform mat4 matrix;\n");
 		sb.append("uniform float textureSize;\n");
 		sb.append("in vec2 in_pos;\n");
@@ -280,9 +260,7 @@ public class AdvancedGLRenderer extends Renderer {
 
 	private String getFragmentShaderCode() {
 		StringBuilder sb = new StringBuilder();
-		String glslVersion = gl.glGetString(GL_SHADING_LANGUAGE_VERSION).split(" ")[0];
-		if (glslVersion.compareTo("3.30") > 0)
-			sb.append("#version 330 core\n");
+		sb.append("#version 150\n");
 		sb.append("uniform sampler2D tex;\n");
 		sb.append("in vec4 color;\n");
 		sb.append("in vec3 texCoord;\n");

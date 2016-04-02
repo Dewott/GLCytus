@@ -10,8 +10,9 @@ public class Preferences {
 	public static int enableBG = 1;
 	public static int width = 960, height = 640;
 	public static int fullScreen = 0;
-	public static int bgmGain = 10;
-	public static int fxGain = 10;
+	public static double bgmGain = 1;
+	public static double fxGain = 1;
+	public static double chartOffset = 0;
 
 	public static void load() throws Exception {
 		BufferedReader in = new BufferedReader(new FileReader("preferences.txt"));
@@ -42,10 +43,13 @@ public class Preferences {
 				fullScreen = val;
 				break;
 			case "bgmGain":
-				bgmGain = val;
+				bgmGain = val / 10.0;
 				break;
 			case "fxGain":
-				fxGain = val;
+				fxGain = val / 10.0;
+				break;
+			case "chartOffset":
+				chartOffset = val;
 				break;
 			}
 			str = in.readLine();

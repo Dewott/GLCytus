@@ -7,3 +7,4 @@ enableBG=1
 bgmGain=10
 fxGain=5
 popupMode=2
+chartOffset=0

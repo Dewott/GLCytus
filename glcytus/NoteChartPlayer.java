@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
 
 import com.jogamp.openal.AL;
 import com.jogamp.openal.ALFactory;
@@ -279,7 +279,7 @@ public class NoteChartPlayer implements GLEventListener {
 		// while (!renderer.isInitialized());
 		started = true;
 		stopped = false;
-		mplayer = playSound(bgm, (float) (Preferences.bgmGain / 10.0));
+		mplayer = playSound(bgm, (float) Preferences.bgmGain);
 	}
 
 	public double calcX(double x) {
@@ -332,7 +332,7 @@ public class NoteChartPlayer implements GLEventListener {
 		}
 		poptrans.pop(time);
 		if (combo > 0)
-			playSound(sound, (float) (Preferences.fxGain / 10.0));
+			playSound(sound, (float) Preferences.fxGain);
 		if ((combo > 0) && (combo % 25 == 0))
 			comboeffect.show(time, combo);
 		if (combo > maxcombo)
@@ -371,7 +371,8 @@ public class NoteChartPlayer implements GLEventListener {
 
 		if (!stopped) {
 			// interpolation
-			double newTime = getMediaTime(mplayer);
+			double newTime = getMediaTime(mplayer) + Preferences.chartOffset;
+			newTime = Math.max(newTime, 0);
 			if (lastUpdateTime == 0)
 				lastUpdateTime = System.nanoTime();
 			if (lastMediaTime == newTime)

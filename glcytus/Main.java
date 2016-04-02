@@ -4,8 +4,9 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.Locale;
 
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -39,6 +40,7 @@ public class Main extends JFrame {
 	}
 
 	public static void main(String args[]) throws Exception {
+		Locale.setDefault(Locale.CHINESE);
 		System.setProperty("sun.java2d.opengl", "false");
 		System.setProperty("sun.java2d.noddraw", "true");
 		try {

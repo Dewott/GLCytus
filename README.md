@@ -3,11 +3,6 @@ GLCytus
 
 Cytus simulator with OpenGL
 
-Screenshots
----
-![ScreenShot1](https://github.com/Dewott/GLCytus/blob/master/ss1.jpg)
-![ScreenShot2](https://github.com/Dewott/GLCytus/blob/master/ss2.jpg)
-
 Dependencies
 ---
 - [JOGL(Java Binding for the OpenGL API)**v2.2.4**](http://jogamp.org/) 
